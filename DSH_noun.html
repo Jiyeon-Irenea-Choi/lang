@@ -1,0 +1,288 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+.wrap{padding:1.5rem 0;}
+.ttl{font-size:17px;font-weight:500;color:var(--color-text-primary);margin-bottom:.25rem;}
+.sub{font-size:12px;color:var(--color-text-secondary);margin-bottom:1rem;line-height:1.5;}
+.sr{display:grid;grid-template-columns:repeat(auto-fit,minmax(80px,1fr));gap:7px;margin-bottom:1rem;}
+.sc{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.5rem;text-align:center;}
+.sn{font-size:19px;font-weight:500;color:var(--color-text-primary);}
+.sl{font-size:10px;color:var(--color-text-secondary);margin-top:1px;}
+.top{display:flex;gap:8px;margin-bottom:.8rem;flex-wrap:wrap;}
+.top input{flex:1;min-width:160px;padding:6px 11px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:13px;background:var(--color-background-primary);color:var(--color-text-primary);}
+.frow{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:1rem;}
+.fb{padding:3px 10px;border:0.5px solid var(--color-border-secondary);border-radius:20px;font-size:11px;background:transparent;color:var(--color-text-secondary);cursor:pointer;}
+.fb.on{background:var(--color-background-info);color:var(--color-text-info);border-color:var(--color-border-info);}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:8px;}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:.8rem 1rem;cursor:pointer;transition:border-color .15s;}
+.card:hover{border-color:var(--color-border-secondary);}
+.card.fl .front{display:none;}.card.fl .back{display:block;}.back{display:none;}
+.ch{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px;}
+.wd{font-size:14px;font-weight:500;color:var(--color-text-primary);line-height:1.3;flex:1;margin-right:6px;}
+.bg{font-size:10px;padding:2px 6px;border-radius:10px;white-space:nowrap;flex-shrink:0;}
+.c0{background:#EEEDFE;color:#3C3489;} .c1{background:#E1F5EE;color:#085041;} .c2{background:#FAECE7;color:#712B13;}
+.c3{background:#E6F1FB;color:#0C447C;} .c4{background:#FAEEDA;color:#633806;} .c5{background:#FBEAF0;color:#72243E;}
+.c6{background:#EAF3DE;color:#27500A;} .c7{background:#F1EFE8;color:#444441;} .c8{background:#FCEBEB;color:#501313;}
+@media(prefers-color-scheme:dark){
+.c0{background:#26215C;color:#CECBF6;} .c1{background:#04342C;color:#9FE1CB;} .c2{background:#4A1B0C;color:#F5C4B3;}
+.c3{background:#042C53;color:#B5D4F4;} .c4{background:#412402;color:#FAC775;} .c5{background:#4B1528;color:#F4C0D1;}
+.c6{background:#173404;color:#C0DD97;} .c7{background:#2C2C2A;color:#D3D1C7;} .c8{background:#501313;color:#F7C1C1;}
+}
+.ps{font-size:10px;color:var(--color-text-tertiary);margin-bottom:4px;}
+.mn{font-size:12px;color:var(--color-text-secondary);line-height:1.5;}
+.ex{font-size:11px;color:var(--color-text-tertiary);margin-top:6px;border-left:2px solid var(--color-border-secondary);padding-left:7px;line-height:1.5;font-style:italic;}
+.ht{font-size:10px;color:var(--color-text-tertiary);text-align:right;margin-top:6px;}
+.mo{font-size:11px;color:var(--color-text-secondary);background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:6px 8px;margin-top:7px;line-height:1.6;}
+.kb{font-size:10px;padding:3px 8px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);background:transparent;color:var(--color-text-tertiary);cursor:pointer;margin-top:7px;}
+.kb.done{background:var(--color-background-success);color:var(--color-text-success);border-color:var(--color-border-success);}
+.empty{text-align:center;color:var(--color-text-tertiary);padding:2rem;font-size:13px;}
+</style>
+<div class="wrap">
+<p class="ttl">임진왜란 논문 전체 어휘 학습장</p>
+<p class="sub">논문에서 추출한 학술 영어 표현 전체 모음 · 카드 클릭 시 메모 확인</p>
+<div class="sr" id="sr"></div>
+<div class="top"><input id="q" placeholder="단어·의미·메모 검색..." oninput="render()"></div>
+<div class="frow" id="fr"></div>
+<div class="grid" id="g"></div>
+</div>
+<script>
+const CATS=["NLP·AI 기술","평가·실험","디지털인문학","역사·고전","학술글쓰기","연결·전환","논문구조","데이터·처리","비교·대조","인물·사건"];
+const BC=["c0","c1","c2","c3","c4","c5","c6","c7","c8","c7"];
+
+const V=[
+// ── 0 NLP·AI 기술 ──
+{w:"pipeline",pos:"n.",cat:0,m:"여러 처리 단계가 연결된 시스템",mo:"multi-stage pipeline — 논문의 핵심 시스템 구조를 설명할 때 필수.",ex:"a multi-stage pipeline combining dense vector retrieval, adaptive temporal filtering"},
+{w:"Graph RAG (Graph Retrieval-Augmented Generation)",pos:"n.",cat:0,m:"지식 그래프를 활용한 검색 증강 생성 기법",mo:"일반 RAG의 한계(long-passage entity relation 포착 불가)를 KG로 보완.",ex:"Graph RAG addresses this by extracting entities and relations into a structured knowledge graph"},
+{w:"RAG (Retrieval-Augmented Generation)",pos:"n.",cat:0,m:"외부 지식을 검색해 LLM에 제공하는 기법",mo:"RAG → 환각 감소. 외부 evidence 기반 추론 유도.",ex:"RAG addresses this issue by supplying the model with actual documents from an external knowledge base"},
+{w:"LLM (Large Language Model)",pos:"n.",cat:0,m:"대규모 언어 모델",mo:"LLMs as candidate providers — 답 생성자가 아닌 후보 제공자로 역할 재정의.",ex:"a human-in-the-loop collaboration model that positions LLMs as candidate providers"},
+{w:"hallucination",pos:"n.",cat:0,m:"LLM이 사실과 다른 내용을 그럴듯하게 생성하는 문제",mo:"task design으로 관리 — 기술적 억제가 아닌 설계 수준의 해결.",ex:"LLM hallucination — a primary concern for humanities researchers"},
+{w:"fine-tuning",pos:"n.",cat:0,m:"사전학습 모델을 특정 태스크에 맞게 추가 훈련",mo:"without task-specific fine-tuning — 이 논문의 주요 강점.",ex:"cross-source alignment is achievable without task-specific fine-tuning"},
+{w:"embedding model",pos:"n.",cat:0,m:"텍스트를 수치 벡터로 변환하는 모델",mo:"BGE-M3 — 1024차원 벡터, 최대 8192 토큰 입력 지원.",ex:"Each text segment is mapped to a 1,024-dimensional dense vector using the BGE-M3 model"},
+{w:"dense vector retrieval",pos:"n.",cat:0,m:"텍스트를 고차원 벡터로 변환해 의미적 유사도로 검색",mo:"dense ↔ sparse. cosine similarity로 유사도 계산.",ex:"dense vector retrieval, adaptive temporal filtering"},
+{w:"sparse lexical features",pos:"n.",cat:0,m:"N-gram 중복률처럼 표면 단어 일치에 기반한 특징",mo:"bigram/trigram — 고유명사·전문용어 정밀 식별에 효과적.",ex:"hybrid scoring that incorporates sparse lexical features"},
+{w:"cosine similarity",pos:"n.",cat:0,m:"두 벡터 간 각도로 유사도를 측정하는 방법",mo:"Score_sem = cos(q,d) = q·d / (|q||d|)",ex:"the dense semantic similarity is calculated via cosine similarity"},
+{w:"named entity recognition (NER)",pos:"n.",cat:0,m:"텍스트에서 인물·장소·기관 등 고유명사를 자동 식별",mo:"NER + name normalization으로 동일 인물의 다양한 표기를 통일.",ex:"core NLP tasks, including date normalization and named entity recognition with name normalization"},
+{w:"coreference resolution",pos:"n.",cat:0,m:"같은 대상을 가리키는 서로 다른 표현들을 연결",mo:"동일 인물을 다른 인물로 오인하는 coreference resolution errors 방지.",ex:"Failure to resolve these variants produces severe coreference resolution errors"},
+{w:"semantic drift",pos:"n.",cat:0,m:"임베딩 모델이 전문 용어를 일반 개념으로 뭉뚱그리는 현상",mo:"'Gijang'을 '전략적 요충지'로 일반화 → 변별력 상실.",ex:"Dense vector models face semantic drift when processing such terms"},
+{w:"knowledge graph (KG)",pos:"n.",cat:0,m:"개체와 관계를 노드·엣지로 표현한 구조화된 지식 표현",mo:"event subgraph = directed graph G=(V,E). 노드: 인물·지명, 엣지: 관계 트리플.",ex:"hybrid scoring that incorporates Knowledge Graph structural similarity"},
+{w:"event subgraph",pos:"n.",cat:0,m:"개별 텍스트 세그먼트에서 추출된 사건 단위의 소규모 그래프",mo:"G=(V,E). 노드=역사 행위자·지명, 엣지=방향성 관계 트리플.",ex:"Each event subgraph is defined as a directed graph G=(V,E)"},
+{w:"Hungarian Algorithm",pos:"n.",cat:0,m:"이분 그래프에서 최적 매칭을 찾는 조합 최적화 알고리즘",mo:"node matching task에 적용. cost matrix → optimal assignment.",ex:"The Hungarian Algorithm is applied to solve this global optimization problem"},
+{w:"node matching",pos:"n.",cat:0,m:"두 그래프의 노드를 최적으로 대응시키는 작업",mo:"S_node = 0.3×Unigram + 0.7×Embedding (검증 세트로 가중치 결정).",ex:"the goal is to find the optimal correspondence that maximizes total similarity"},
+{w:"FAISS",pos:"n.",cat:0,m:"Facebook AI의 근사 최근접 이웃 검색 라이브러리",mo:"7,918개 Joseon Sillok 세그먼트에 대한 효율적 유사도 검색 지원.",ex:"the FAISS library is used to construct an approximate nearest neighbor index"},
+{w:"approximate nearest neighbor",pos:"n.",cat:0,m:"정확한 최근접 이웃 대신 근사값을 빠르게 찾는 방법",mo:"벡터 DB 규모가 커질수록 필수적인 검색 효율화 기법.",ex:"supporting an efficient similarity search across the 7,918 candidate segments"},
+{w:"vector database",pos:"n.",cat:0,m:"임베딩 벡터를 저장하고 유사도 검색을 지원하는 DB",mo:"텍스트 임베딩 저장 → dense retrieval에 활용.",ex:"Text embeddings are generated and stored in a vector database for dense retrieval"},
+{w:"graph database",pos:"n.",cat:0,m:"그래프 구조(노드·엣지)를 저장하는 전용 데이터베이스",mo:"event subgraph 저장 → structural similarity scoring에 활용.",ex:"event graphs are constructed and stored in a graph database"},
+{w:"pseudo-labels",pos:"n.",cat:0,m:"LLM이 자동 생성한 학습용 레이블",mo:"EAMAC — LLM-generated pseudo-labels로 주석 데이터 부족 문제 우회.",ex:"using LLM-generated pseudo-labels as training data"},
+{w:"weakly supervised learning",pos:"n.",cat:0,m:"불완전한 신호로 모델을 훈련하는 방법",mo:"fully supervised ↔ weakly supervised. 주석 데이터 희소 문제 해결.",ex:"demonstrating the feasibility of weakly supervised learning for classical text alignment tasks"},
+{w:"semi-closed strategy",pos:"n.",cat:0,m:"핵심 유형은 미리 정의하되 개방형 생성도 허용하는 전략",mo:"relation types: 핵심 유형 고정 + 개방형 관계 허용 → 의미 유연성 유지.",ex:"Relation types follow a semi-closed strategy"},
+{w:"N-gram (bigram / trigram)",pos:"n.",cat:0,m:"연속된 N개 문자/단어 단위. bigram=2, trigram=3",mo:"고전 중국어에서 2~3자 연속이 고유명사·관직명을 정밀 식별.",ex:"Bigram and trigram string overlap rates are incorporated as sparse lexical features"},
+{w:"BGE-M3",pos:"n.",cat:0,m:"다국어·다기능·다단위 텍스트 임베딩 모델",mo:"고전 중국어 포함 학습, 최대 8192 토큰, 1024차원 벡터 출력.",ex:"Each text segment is mapped to a 1,024-dimensional dense vector using the BGE-M3 model"},
+{w:"Gemini 2.5 Pro / 3.0 Pro Preview",pos:"n.",cat:0,m:"Google의 LLM 모델 시리즈",mo:"4개 모델 비교: Gemini 2.5 Pro가 최고 recall, Gemini 3.0이 noise 최소화.",ex:"Gemini 3.0 Pro Preview was selected as the final LLM reasoning module"},
+{w:"GPT-4.1 / GPT-5.2",pos:"n.",cat:0,m:"OpenAI의 LLM 모델 시리즈",mo:"GPT-4.1(retention 76.2%), GPT-5.2(recall 0.4714로 최저).",ex:"GPT-4.1 0.5758 recall; GPT-5.2 0.4714 recall"},
+{w:"confidence score",pos:"n.",cat:0,m:"모델의 판단 확신도. H(높음)/M(중간)/L(낮음)",mo:"human-in-the-loop 메커니즘 — 연구자가 검토 우선순위를 결정하는 근거.",ex:"a confidence score (H, M, or L) ... enabling historians to determine their own review priorities"},
+{w:"prompt design",pos:"n.",cat:0,m:"LLM에 입력하는 지시문의 구성 방식",mo:"role + type definitions + examples + exclusion criteria + output format 5요소.",ex:"The prompt is designed to guide the LLM to reason in a manner that approximates the judgment logic of a historian"},
+{w:"role assignment",pos:"n.",cat:0,m:"프롬프트에서 LLM에게 특정 역할을 부여하는 기법",mo:"역사학자의 판단 논리로 추론하도록 역할 지정.",ex:"It comprises five elements: role assignment, the definitions of the three parallel reading types"},
+{w:"structured output format",pos:"n.",cat:0,m:"LLM이 정해진 형식으로 결과를 출력하도록 지시",mo:"병렬독해 여부 + 유형 + 신뢰도 점수를 구조화된 형태로 출력.",ex:"The output format requires the model to produce, in structured form, a judgment"},
+{w:"chunking",pos:"n.",cat:0,m:"긴 텍스트를 일정 단위로 나누는 처리",mo:"character-based(800 tokens) vs event-based — 둘 다 한계 존재.",ex:"Dense + Chunking (800) improves mAP@30 to 0.1741 relative to the dense baseline"},
+{w:"text segmentation",pos:"n.",cat:0,m:"텍스트를 분석 단위로 분할하는 작업",mo:"이 논문은 원래 항목(entry)을 기본 검색 단위로 채택.",ex:"the original entry as the basic retrieval unit"},
+{w:"canonical identifier",pos:"n.",cat:0,m:"동일 개체의 모든 표기를 통합하는 고유 식별자",mo:"482명 핵심 인물 DB — 각 인물에 canonical identifier + 모든 이명 부여.",ex:"assigning each figure a unique canonical identifier accompanied by all known name variants"},
+{w:"entity normalization",pos:"n.",cat:0,m:"동일 개체의 다양한 표기를 단일 표준 형태로 통일",mo:"加藤清正 = 淸正 = 主計頭 = 倭將清正 → 하나의 canonical ID.",ex:"A unified person identification database covering 482 core historical figures was constructed"},
+{w:"date normalization",pos:"n.",cat:0,m:"두 사료의 서로 다른 날짜 표기를 통일된 체계로 변환",mo:"명·조선 각각의 연호를 통일 음력으로 변환 → 시간 비교 기반 마련.",ex:"all temporal markers were standardized to a unified lunar calendar"},
+{w:"adaptive time window",pos:"n.",cat:0,m:"검색 범위를 상황에 따라 자동으로 조정하는 시간 필터",mo:"±3개월 → 충분하지 않으면 ±6개월로 자동 확장.",ex:"An adaptive iterative retrieval mechanism is applied: first ±3 months; if insufficient, expands to ±6 months"},
+{w:"directed graph",pos:"n.",cat:0,m:"방향성 있는 엣지로 구성된 그래프",mo:"G=(V,E). 엣지 e=(v_i, r, v_j) — 방향성 관계 트리플.",ex:"Each event subgraph is defined as a directed graph G=(V,E)"},
+{w:"relational triple",pos:"n.",cat:0,m:"(주체, 관계, 객체) 형태의 구조화된 지식 표현 단위",mo:"e=(v_i, r, v_j) — KG의 기본 구성 단위.",ex:"the edge set E represents interactions between entities as directed relational triples"},
+// ── 1 평가·실험 ──
+{w:"ablation study",pos:"n.",cat:1,m:"각 구성요소를 하나씩 제거해 기여도를 측정하는 실험",mo:"ablation = 제거. 최적 구성 찾기 위한 논문 evaluation 표준.",ex:"we conducted a systematic ablation study on the validation set"},
+{w:"mAP (mean Average Precision)",pos:"n.",cat:1,m:"검색 순위 품질을 평가하는 표준 지표",mo:"mAP@30, @50, @100 — 상위 N개 결과 내 평균 정밀도.",ex:"Results are reported at Top-30, Top-50, and Top-100 cutoffs using mAP and Recall"},
+{w:"recall",pos:"n.",cat:1,m:"재현율. 정답 중 시스템이 찾아낸 비율",mo:"Recall = TP/(TP+FN). Recall@50 = 0.9048 — 최종 성능.",ex:"Recall@50 = 0.9048, confirming the retrieval module's effectiveness"},
+{w:"precision",pos:"n.",cat:1,m:"정밀도. 찾은 것 중 실제 정답 비율",mo:"Precision = TP/(TP+FP). false positive가 많으면 하락.",ex:"Treating unannotated results as false positives would introduce systematic noise"},
+{w:"false positive",pos:"n.",cat:1,m:"틀린 것을 맞다고 잘못 판단한 경우",mo:"FP가 많으면 precision 하락. 검색 noise의 주요 원인.",ex:"Treating such unannotated results as false positives would introduce systematic noise into Precision-based metrics"},
+{w:"Top-N cutoff",pos:"n.",cat:1,m:"상위 N개 결과 내에서만 평가하는 방식",mo:"Top-30, Top-50, Top-100으로 계층적 평가.",ex:"Results are reported at Top-30, Top-50, and Top-100 cutoffs"},
+{w:"baseline",pos:"n.",cat:1,m:"비교 기준이 되는 가장 단순한 방법",mo:"Dense (Baseline) = mAP@30: 0.1154. 모든 실험의 출발점.",ex:"Dense (Baseline) 0.1154 — the starting point for comparison"},
+{w:"validation set",pos:"n.",cat:1,m:"모델 조정 및 검증에 사용하는 데이터 세트",mo:"71쌍(1597년) — 하이퍼파라미터 결정 및 모델 선택에 사용.",ex:"Validation Set (1597): 71 pairs (77%)"},
+{w:"test set",pos:"n.",cat:1,m:"최종 성능 평가에 사용하는 별도 데이터 세트",mo:"21쌍(1592년) — validation과 완전히 분리된 최종 평가용.",ex:"Test Set (1592): 21 pairs (23%)"},
+{w:"annotation / annotate",pos:"n./v.",cat:1,m:"데이터에 정답 레이블을 수동으로 부여",mo:"binary judgment — 병렬독해 관계 여부만 판단(유형 분류 불포함).",ex:"A parallel reading dataset of 92 annotated pairs was constructed through manual comparison"},
+{w:"hyperparameter search",pos:"n.",cat:1,m:"모델 성능 최적화를 위해 가중치·임계값 등을 조정",mo:"0.3×Unigram + 0.7×Embedding — 검증 세트로 결정된 가중치.",ex:"These weights were determined through a hyperparameter search in the validation set"},
+{w:"retention rate",pos:"n.",cat:1,m:"LLM이 후보 중 실제 관계로 판단해 남긴 비율",mo:"높을수록 recall↑, noise↑. Gemini 3.0이 noise 48% 감소 대비 recall 8.5% 손실.",ex:"higher retention rates are associated with higher recall, but also with larger output volumes"},
+{w:"monotonically",pos:"adv.",cat:1,m:"단조롭게, 한 방향으로만 증가/감소",mo:"Performance increases monotonically with n-gram order: Unigram→Bigram→Trigram.",ex:"Performance increases monotonically with n-gram order"},
+{w:"marginal contribution",pos:"n.",cat:1,m:"각 구성요소가 추가될 때의 개별 성능 향상 기여분",mo:"isolating the marginal contribution of each component — ablation의 목적.",ex:"isolating the marginal contribution of each component"},
+{w:"retrieval noise",pos:"n.",cat:1,m:"검색 결과에 포함된 불필요한 잘못된 후보들",mo:"formulaic phrases → 다른 사건 항목도 높은 어휘 유사도 → noise 유발.",ex:"constituting retrieval noise in this study"},
+{w:"performance profile",pos:"n.",cat:1,m:"모델의 여러 지표를 종합한 특성 분포",mo:"Fig.4: y=recall, x=aligned pairs, bubble size=retention rate로 시각화.",ex:"the performance profile of Gemini 3.0 Pro Preview is particularly noteworthy"},
+{w:"positive correlation",pos:"n.",cat:1,m:"두 변수가 같은 방향으로 움직이는 관계",mo:"retention rate ↑ → recall ↑, output volume ↑. 일관된 양의 상관.",ex:"The results reveal a consistent positive correlation"},
+{w:"binary judgment",pos:"n.",cat:1,m:"두 가지 중 하나를 선택하는 판단",mo:"병렬독해 관계 여부만 판단 — 유형 분류는 LLM에 위임.",ex:"Annotation was conducted as a binary judgment"},
+{w:"benchmark",pos:"n.",cat:1,m:"성능 비교를 위한 표준 데이터셋 또는 기준",mo:"human-verified benchmark — 전문가 주석으로 신뢰성 확보.",ex:"providing a reliable humanities-based test set for model evaluation"},
+{w:"ground truth",pos:"n.",cat:1,m:"평가의 기준이 되는 정답 레이블",mo:"historian's manual judgment = ground truth. LLM 생성 레이블과 차별화.",ex:"each annotation reflects the careful judgment of a historian with classical text expertise"},
+// ── 2 디지털인문학 ──
+{w:"parallel reading",pos:"n.",cat:2,m:"이질적 출처에서 같은 사건 기록을 대조하는 방법",mo:"Type 1(텍스트 동일성), Type 2(핵심 키워드 대응), Type 3(인과·시간 추론).",ex:"the automatic alignment of heterogeneous historical sources — 'parallel reading'"},
+{w:"distant reading",pos:"n.",cat:2,m:"대규모 텍스트를 계량적으로 분석하는 방법론",mo:"↔ close reading. 개별 텍스트의 세밀한 의미를 놓치는 한계.",ex:"This approach aims to overcome the limitations of distant reading"},
+{w:"close reading",pos:"n.",cat:2,m:"개별 텍스트를 깊이 있게 분석하는 전통적 방법론",mo:"close reading의 정밀성 + distant reading의 규모를 결합.",ex:"improving the precision of close reading"},
+{w:"digital humanities",pos:"n.",cat:2,m:"디지털 기술을 인문학 연구에 적용하는 학제간 분야",mo:"DSH = Digital Scholarship in the Humanities. 이 논문의 게재지.",ex:"contributions to the field of digital humanities"},
+{w:"corpus",pos:"n.",cat:2,m:"분석 대상 텍스트 데이터의 집합. 복수형 corpora",mo:"7,918 Joseon Sillok segments + 250 Ming Shilu query segments.",ex:"scope reduction was necessary to ensure the efficiency of subsequent semantic analysis"},
+{w:"heterogeneous sources",pos:"n.",cat:2,m:"서로 다른 기관·관점에서 편찬된 이질적 사료",mo:"Ming(중국 시각) vs Joseon(조선 시각) — 편찬 관점·제도 상이.",ex:"aligning records of the same historical event across heterogeneous sources"},
+{w:"cross-source alignment",pos:"n.",cat:2,m:"서로 다른 사료에 걸친 동일 사건 자동 대응",mo:"이 논문의 핵심 태스크. fine-tuning 없이 달성.",ex:"cross-source alignment of classical Chinese historical texts is achievable without task-specific fine-tuning"},
+{w:"annalistic record",pos:"n.",cat:2,m:"연·월·일 순서로 사건을 기록하는 편년체 역사서",mo:"Ming Shilu, Joseon Sillok 모두 편년체. 날짜 정규화의 이유.",ex:"both sources share the annalistic format as a common organizational structure"},
+{w:"textual parallel reading",pos:"n.",cat:2,m:"두 텍스트에서 같은 내용을 담은 구절을 짝짓는 작업",mo:"Type 1~3의 3단계 유형으로 개념화.",ex:"an explicit operational definition of 'the same event' is established across three distinct types"},
+{w:"digitization",pos:"n.",cat:2,m:"인쇄·필사 자료를 전산 처리 가능한 형태로 변환",mo:"기존 연구는 개별 사료 디지털화에 집중 — 통합 DB 부재.",ex:"existing initiatives have focused primarily on the digitization of individual sources"},
+{w:"5W1H framework",pos:"n.",cat:2,m:"육하원칙. Who/What/When/Where/Why/How",mo:"Time·Place·Person만 선택 — 동사적 표현은 추출 불안정.",ex:"Historical research conventionally draws on the 5W1H framework to define events"},
+{w:"conceptual precision",pos:"n.",cat:2,m:"개념의 명확한 정의 및 경계 설정",mo:"인문학적 탐구와 전산 방법의 가교 역할 — 쉽게 간과됨.",ex:"Conceptual precision is the critical bridge between humanistic inquiry and computational method"},
+{w:"humanistic inquiry",pos:"n.",cat:2,m:"인문학적 탐구. 텍스트·역사·문화를 해석하는 학문적 접근",mo:"computational method와 대립되는 인문학 고유의 탐구 방식.",ex:"Conceptual precision is the critical bridge between humanistic inquiry and computational method"},
+{w:"human-in-the-loop",pos:"n.",cat:2,m:"자동화 파이프라인에서 인간이 최종 판단을 내리는 설계",mo:"LLMs = candidate providers, researchers = final interpreters.",ex:"a human-in-the-loop collaboration model"},
+{w:"database infrastructure",pos:"n.",cat:2,m:"연구 데이터를 체계적으로 저장·검색 가능하게 하는 기반",mo:"RAG를 answer generator가 아닌 database-building infrastructure로 재정의.",ex:"reframes RAG from answer generator to database-building infrastructure"},
+{w:"cross-disciplinary collaboration",pos:"n.",cat:2,m:"서로 다른 학문 분야 간의 협력",mo:"인문학자 + 전산학자. 개념 정의 간과가 가장 큰 위험.",ex:"the element most easily overlooked in cross-disciplinary collaboration"},
+{w:"string matching / N-gram statistical methods",pos:"n.",cat:2,m:"문자열 일치·통계적 N-gram 기반 텍스트 비교 방법",mo:"직접 전사된 공식 문서에는 효과적. 의역·시각 변화에는 한계.",ex:"core technologies relying primarily on string matching and N-gram statistical methods"},
+{w:"semantic gap",pos:"n.",cat:2,m:"어휘적으로 다르지만 의미적으로 연결된 텍스트 간의 격차",mo:"다른 나라에서 같은 사건을 다른 어휘로 기록 → semantic gap 발생.",ex:"Conventional keyword matching techniques cannot effectively bridge this semantic gap"},
+{w:"parallel reading type taxonomy",pos:"n.",cat:2,m:"병렬독해 관계를 유형별로 분류하는 체계",mo:"three-type taxonomy: Type 1/2/3. 유형별 특성이 검색 전략에 영향.",ex:"a three-type parallel reading taxonomy that precisely defines the conceptual boundaries"},
+{w:"source material",pos:"n.",cat:2,m:"연구의 근거가 되는 1차 역사 자료",mo:"Ming Shilu, Joseon Sillok — 이 논문의 primary source materials.",ex:"a design decision that must be made based on the characteristics of the source materials"},
+// ── 3 역사·고전 ──
+{w:"Imjin War (壬辰倭亂)",pos:"n.",cat:3,m:"1592~1598년 명·조선·일본 간의 동아시아 국제전쟁",mo:"한: 임진왜란/정유재란, 중: 萬曆朝鮮戰役, 일: 文禄の役/慶長の役.",ex:"The Imjin War (1592–1598) was one of the largest international conflicts of the late sixteenth century"},
+{w:"Ming Shilu (明實錄)",pos:"n.",cat:3,m:"명나라 황제별 재위 기간 공식 편년체 실록",mo:"매일의 조정 일기·상소·칙서 기반. 외교·군사사의 핵심 사료.",ex:"the Veritable Records of the Ming Dynasty (Ming Shilu)"},
+{w:"Joseon Sillok (朝鮮王朝實錄)",pos:"n.",cat:3,m:"조선 태조~철종 472년간의 공식 편년체 실록",mo:"UNESCO 세계기록유산 등재. XML 형식으로 국사편찬위원회가 공개.",ex:"the Veritable Records of the Joseon Dynasty (Joseon Sillok)"},
+{w:"veritable records",pos:"n.",cat:3,m:"실록. 군주 재위 기간을 연·월·일로 기록한 공식 역사서",mo:"veritable = 진실된. Ming Shilu = 명실록, Joseon Sillok = 조선왕조실록.",ex:"the Veritable Records of the Ming dynasty"},
+{w:"classical Chinese",pos:"n.",cat:3,m:"고전 중국어. 두 실록의 공통 문어",mo:"classical ↔ vernacular(현대구어). 임베딩 모델 성능 제약의 원인.",ex:"both sources share Classical Chinese as a common written medium"},
+{w:"tributary system",pos:"n.",cat:3,m:"중국 황제를 중심으로 주변국이 조공을 바치는 동아시아 국제 질서",mo:"the East Asian tributary system — 임진왜란으로 불안정화.",ex:"a major event that destabilized the East Asian tributary system"},
+{w:"geopolitical order",pos:"n.",cat:3,m:"국가 간 세력·영토·동맹 관계로 이루어진 국제 구조",mo:"fundamentally reshaped the geopolitical order of East Asia.",ex:"a confrontation that fundamentally reshaped the geopolitical order of East Asia"},
+{w:"compilation tradition",pos:"n.",cat:3,m:"역사서를 작성하는 관행·형식·제도적 체계",mo:"distinct compilation traditions → 같은 사건의 이질적 기술.",ex:"belong to distinct political systems and compilation traditions"},
+{w:"editorial stance",pos:"n.",cat:3,m:"기록을 작성한 국가·기관의 정치적·문화적 입장",mo:"국가적 맥락·문화적 시각·편찬 태도의 차이 → 서술 diverge.",ex:"due to differences in national context, cultural perspective, and editorial stance"},
+{w:"investiture",pos:"n.",cat:3,m:"책봉. 황제가 외국 군주에게 지위를 공식 수여하는 의례",mo:"Japan has received the investiture — 임진왜란 강화 협상의 핵심.",ex:"Yang Fangheng, Principal Envoy of the Investiture Mission to Japan"},
+{w:"memorial / submit a memorial",pos:"n./phrase",cat:3,m:"주문(奏文). 신하가 황제에게 올리는 공식 보고서",mo:"memorialized = 상소를 올렸다. 명 실록 기사의 주요 형식.",ex:"submitted a memorial on the completion of his mission"},
+{w:"imperial rescript",pos:"n.",cat:3,m:"칙지. 황제가 상소·청원에 내리는 공식 회답",mo:"edict = 황제의 명령, rescript = 청원에 대한 황제의 답변.",ex:"An imperial rescript was issued: Japan has received the investiture"},
+{w:"imperial edict",pos:"n.",cat:3,m:"조칙. 황제가 내리는 공식 명령 문서",mo:"edicts가 조선실록에 거의 그대로 전재 → Type 1 사례.",ex:"primary sources including daily court diaries, memorials, and edicts"},
+{w:"courtesy name",pos:"n.",cat:3,m:"자(字). 성인이 되면 받는 공식 이름 외 별칭",mo:"full name, courtesy name, official title, pejorative epithet — 동일 인물의 4가지 지칭 방식.",ex:"the same historical figure frequently appears under different designations — full name, courtesy name, official title"},
+{w:"official title",pos:"n.",cat:3,m:"관직명. 역사 문헌에서 인물을 지칭하는 직함",mo:"都督僉事, 右議政, 主計頭 등 — entity normalization 필요.",ex:"frequently appears under different designations — full name, courtesy name, official title"},
+{w:"pejorative epithet",pos:"n.",cat:3,m:"비하 별칭. 적을 낮춰 부르는 경멸적 표현",mo:"倭將(왜장) 같은 표현. 같은 인물도 사료에 따라 다르게 표기.",ex:"the same historical figure frequently appears under ... pejorative epithet"},
+{w:"annalistic format",pos:"n.",cat:3,m:"연·월·일 순서로 사건을 기록하는 편년체 형식",mo:"두 실록의 공통 조직 구조 — 날짜 정규화의 이유.",ex:"both sources share the annalistic format as a common organizational structure"},
+{w:"reign-year notation",pos:"n.",cat:3,m:"황제·왕의 재위 연호를 사용하는 날짜 표기 체계",mo:"명: 萬曆, 조선: 宣祖 등 각기 다른 연호 → 통일 음력으로 변환 필요.",ex:"Since the Ming Shilu and the Joseon Sillok each employ their own respective reign-year notations"},
+{w:"lunar calendar",pos:"n.",cat:3,m:"음력. 달의 위상을 기준으로 한 날짜 체계",mo:"unified lunar calendar — 두 사료의 날짜를 비교하는 공통 기준.",ex:"all temporal markers were standardized to a unified lunar calendar"},
+{w:"court diary",pos:"n.",cat:3,m:"조정 일기. 매일의 황실 업무를 기록한 1차 자료",mo:"daily court diaries, memorials, and edicts → Ming Shilu 편찬의 기반.",ex:"primary sources including daily court diaries, memorials, and edicts"},
+{w:"Ding Yingtai affair (丁應泰 사건)",pos:"n.",cat:3,m:"명의 신료 정응태가 조선을 무고한 외교 위기",mo:"조선의 존립을 위협한 사건. 1598년 가장 많은 대응 기록 유발.",ex:"The entry concerns the Ding Yingtai impeachment affair — a diplomatic crisis that threatened Joseon's very existence"},
+{w:"Jeongyou War (정유재란)",pos:"n.",cat:3,m:"임진왜란의 2차 침략(1597~1598)",mo:"1598년 기록이 540쌍으로 최다 — 정유재란의 최고조 반영.",ex:"1598 records the highest total match count at 540 pairs, reflecting the peak intensity of the Jeongyou War"},
+{w:"investiture negotiations",pos:"n.",cat:3,m:"임진왜란 기간 명·일 간 강화 협상",mo:"1595년 平均 14.2쌍 — 책봉 협상이 다각도로 기록됨.",ex:"1595 yields the highest average match count at 14.2, owing to the extensive documentation of investiture negotiations"},
+{w:"UNESCO Memory of the World Register",pos:"n.",cat:3,m:"유네스코 세계기록유산. 인류 문화유산 가치 있는 문서 목록",mo:"Joseon Sillok이 등재된 세계적 문화유산.",ex:"it has since been inscribed on the UNESCO Memory of the World Register"},
+{w:"diplomatic episode",pos:"n.",cat:3,m:"외교적 사건. 국가 간 협상·충돌의 구체적 사례",mo:"Ding Yingtai 사건, 宋應昌의 문학 교류 등 개별 외교 사례.",ex:"others center on diplomatic episodes and key figures"},
+{w:"source reliability",pos:"n.",cat:3,m:"사료 신뢰성. 기록이 실제 사실을 얼마나 정확히 전달하는지",mo:"Ming Shilu의 외교·정치 기록에서 선택적 기록·왜곡 사례 확인.",ex:"These case studies have repeatedly revealed source reliability issues in the Ming Shilu"},
+{w:"macro-level summary",pos:"n.",cat:3,m:"중앙 정부에 보고된 거시적·요약적 기록",mo:"Ming Shilu의 특성 — 전황을 압축해 황제에게 보고.",ex:"The Ming Shilu offers only a brief reference in a memorial — a macro-level summary submitted to the central government"},
+{w:"micro-level field report",pos:"n.",cat:3,m:"현장에서 직접 보고된 세부적·현장감 있는 기록",mo:"Joseon Sillok의 특성 — 현장 관리의 긴급 보고를 직접 인용.",ex:"The Joseon Sillok directly cites the urgent field report — micro-level field report"},
+// ── 4 학술글쓰기 ──
+{w:"This study presents / introduces",pos:"phrase",cat:4,m:"이 연구는 ~을 제시/도입한다. 논문 기여 소개 표현",mo:"presents = 결과물 소개, introduces = 새 개념·방법 도입.",ex:"This study presents Imjin War-Align, an automated framework"},
+{w:"This study makes three contributions",pos:"phrase",cat:4,m:"이 연구는 세 가지 기여를 한다",mo:"Introduction 후반부 필수 구조. 번호 매겨 명료하게 제시.",ex:"This study makes three contributions to the field of digital humanities"},
+{w:"demonstrate that",pos:"phrase",cat:4,m:"~임을 보여준다. 실험 결과로 사실을 입증",mo:"prove보다 신중. 실험·데이터 기반 주장에 적합.",ex:"Ablation experiments demonstrate that no single feature alone achieves sufficient performance"},
+{w:"motivate",pos:"v.",cat:4,m:"~의 동기를 제공한다. 선행 연구 한계 → 본 연구 필요성",mo:"These limitations motivate a fundamental reframing — 논리적 흐름 연결.",ex:"These limitations motivate a fundamental reframing of the system's role"},
+{w:"address the challenge of",pos:"phrase",cat:4,m:"~의 도전과제를 다루다. 연구가 해결하려는 문제 소개",mo:"To address the challenge of ... — 본론 전환 표현.",ex:"To address the challenge of cross-source parallel reading, this study introduces Graph RAG"},
+{w:"is attributable to",pos:"phrase",cat:4,m:"~에 기인한다. 현상의 원인 설명",mo:"fundamentally attributable to — '근본적으로 ~때문에'.",ex:"This gap is fundamentally attributable to the sheer scale of the two sources"},
+{w:"warrants further investigation",pos:"phrase",cat:4,m:"추가 연구가 필요하다. 미래 연구 제언",mo:"Discussion·Conclusion에서 향후 연구 방향 제안 시 사용.",ex:"This cross-source perspective warrants further investigation"},
+{w:"The findings provide affirmative answers",pos:"phrase",cat:4,m:"연구 결과가 긍정적 답을 제공한다. RQ에 답하는 표현",mo:"RQ1, RQ2에 대한 답을 Discussion에서 체계적으로 제시.",ex:"The findings provide affirmative answers to both research questions"},
+{w:"is a noteworthy finding",pos:"phrase",cat:4,m:"주목할 만한 발견이다. 중요 결과 강조",mo:"From the perspective of humanities research — 인문학적 함의 강조.",ex:"This is a noteworthy finding from the perspective of humanities research"},
+{w:"reframe A as B",pos:"phrase",cat:4,m:"A를 B로 재구성하다. 기존 개념을 새 관점으로 재정의",mo:"reframe RAG from answer generator to database-building infrastructure.",ex:"this study accordingly reframes RAG from answer generator to database-building infrastructure"},
+{w:"building on X",pos:"phrase",cat:4,m:"X를 바탕으로. 선행 연구·이전 논의를 기반으로 확장",mo:"Building on this reframing ... this study designs the pipeline.",ex:"Building on this reframing of RAG, this study designs the Imjin War-Align pipeline"},
+{w:"seek to address",pos:"phrase",cat:4,m:"~을 해결하고자 한다. 연구 목적 표현",mo:"This study seeks to address these structural constraints.",ex:"This study seeks to address these structural constraints through digital methods"},
+{w:"are paramount",pos:"phrase",cat:4,m:"가장 중요하다. 절대적 우선순위 표현",mo:"accuracy and source reliability are paramount — 인문학 연구의 절대 기준.",ex:"accuracy and source reliability are paramount"},
+{w:"presuppose",pos:"v.",cat:4,m:"전제하다. 어떤 사실을 당연한 것으로 가정",mo:"a model that presupposes a uniquely correct answer exists.",ex:"a model that presupposes a uniquely correct answer exists"},
+{w:"at odds with",pos:"phrase",cat:4,m:"~와 상충한다. 두 개념·접근이 서로 맞지 않음",mo:"fundamentally at odds with humanities research.",ex:"This presupposition is fundamentally at odds with humanities research"},
+{w:"in the absence of",pos:"phrase",cat:4,m:"~이 없는 상태에서",mo:"models are often built in the absence of explicit conceptual definitions.",ex:"models are often built in the absence of explicit conceptual definitions"},
+{w:"constitute",pos:"v.",cat:4,m:"~을 구성하다. ~에 해당하다",mo:"constitutes the primary candidate database / constitutes a long-standing concern.",ex:"These 7,918 segments ... constitute the primary candidate database"},
+{w:"interacting factors",pos:"n.",cat:4,m:"상호작용하는 요인들. 두 원인이 함께 작용해 결과를 만듦",mo:"The asymmetric structure is explained by two interacting factors.",ex:"This asymmetric structure is explained by two interacting factors"},
+{w:"in practice",pos:"phrase",cat:4,m:"실제로는. 이론과 달리 현실에서는",mo:"in practice, the gap between Type 2 and Type 3 is just 0.006.",ex:"In practice, the gap between Type 2 (0.680) and Type 3 (0.674) on semantic score is just 0.006"},
+{w:"stemming from",pos:"phrase",cat:4,m:"~에서 비롯되는. 원인·기원 설명",mo:"This result stems from a structural characteristic of the source materials.",ex:"This result stems from a structural characteristic of the source materials"},
+{w:"on the grounds that",pos:"phrase",cat:4,m:"~라는 이유로. 근거를 제시하는 표현",mo:"These three dimensions are selected on the grounds that they are identifiable.",ex:"These three dimensions are selected on the grounds that, as nominal attributes, they are relatively identifiable"},
+{w:"regarded with skepticism",pos:"phrase",cat:4,m:"회의적 시각으로 바라보다",mo:"automatically generated KGs are often regarded with skepticism on grounds of factual accuracy.",ex:"automatically generated KGs are often regarded with skepticism on grounds of factual accuracy"},
+{w:"scale of the source materials",pos:"phrase",cat:4,m:"사료의 방대한 규모. 인문학 연구의 구조적 제약",mo:"sheer scale + limited specialists + absence of technical tools = 구조적 한계.",ex:"This gap is fundamentally attributable to the sheer scale of the two sources"},
+// ── 5 연결·전환 ──
+{w:"however",pos:"adv.",cat:5,m:"그러나. 앞 내용과 대조",mo:"가장 빈번한 대조 연결어. 문장 첫 부분에 위치.",ex:"However, due to differences in national context ... their accounts inevitably diverge"},
+{w:"nevertheless",pos:"adv.",cat:5,m:"그럼에도 불구하고. 앞의 부정적 내용에도 불구하고",mo:"however보다 강한 역접. 앞의 어려움에도 불구하고 진행함을 강조.",ex:"Nevertheless, each annotation reflects the careful judgment of a historian"},
+{w:"by contrast",pos:"phrase",cat:5,m:"이에 반해. 두 대상의 차이를 명확히 대비",mo:"the Joseon Sillok, by contrast — 비교 대상 앞에 먼저 제시 후 사용.",ex:"The Joseon Sillok, by contrast, directly cites the urgent field report"},
+{w:"accordingly",pos:"adv.",cat:5,m:"따라서. 앞의 논리적 결론으로서 다음 행동·결정",mo:"This study accordingly reframes — 앞 분석 결과에 따른 설계 결정.",ex:"This study accordingly reframes RAG from answer generator to database-building infrastructure"},
+{w:"in turn",pos:"phrase",cat:5,m:"차례로. 순서대로 각 항목을 논의",mo:"evaluates the two core modules ... in turn — 순차적 평가 구조 안내.",ex:"This chapter evaluates the two core modules of the pipeline in turn"},
+{w:"more tellingly",pos:"phrase",cat:5,m:"더 시사하는 바는. 더 중요한 증거 강조",mo:"More tellingly, combining dense + n-gram yields lower performance than Trigram alone.",ex:"More tellingly, combining dense retrieval with all n-gram features yields lower performance"},
+{w:"in short",pos:"phrase",cat:5,m:"요컨대. 복잡한 설명을 한 문장으로 요약",mo:"In short, the Ming sources report comprehensively while Joseon sources respond element by element.",ex:"In short, the Ming sources report comprehensively while the Joseon sources respond element by element"},
+{w:"whereas",pos:"conj.",cat:5,m:"반면에. 두 가지를 대조하는 접속사",mo:"while과 유사하나 더 격식체. 두 절을 한 문장 안에서 대비.",ex:"a macro-level summary ... whereas the Joseon Sillok preserves individual responses"},
+{w:"thereby",pos:"adv.",cat:5,m:"그렇게 함으로써. 앞 행동의 결과·수단 설명",mo:"constraining the model ... thereby reducing hallucination.",ex:"constraining the model to reason on the basis of retrieved evidence and thereby reducing hallucination"},
+{w:"furthermore",pos:"adv.",cat:5,m:"더 나아가. 앞 내용에 추가 정보 덧붙임",mo:"Furthermore, the scarcity of high-quality annotated data severely limits scalability.",ex:"Furthermore, the scarcity of high-quality annotated classical Chinese data severely limits the scalability"},
+{w:"in contrast",pos:"phrase",cat:5,m:"이에 반해. 앞과 반대되는 내용 도입",mo:"In contrast, this study employed manual comparison — LLM 레이블 vs 수동 주석.",ex:"In contrast, this study employed manual comparison by the researcher"},
+{w:"following",pos:"prep.",cat:5,m:"~에 이어. 시간·논리적 순서 표현",mo:"Following the initial candidate ranking ... the LLM module performs final verification.",ex:"Following the initial candidate ranking produced by the hybrid retrieval module"},
+{w:"specifically",pos:"adv.",cat:5,m:"구체적으로. 앞의 일반적 진술을 구체화",mo:"specifically the Ming Shilu and the Joseon Sillok — 대상을 명확히 특정.",ex:"specifically the Ming Shilu and the Joseon Sillok during the Imjin War period"},
+{w:"as visualized in",pos:"phrase",cat:5,m:"~에서 시각화된 바와 같이. 그림으로 확인 가능함을 서술",mo:"As visualized in Fig.4, the performance profile of Gemini 3.0 is particularly noteworthy.",ex:"As visualized in Fig. 4, the performance profile of Gemini 3.0 Pro Preview is particularly noteworthy"},
+// ── 6 논문구조 ──
+{w:"research question (RQ)",pos:"n.",cat:6,m:"논문이 답하고자 하는 핵심 질문",mo:"RQ1, RQ2. Introduction에서 제시, Discussion에서 답.",ex:"This study addresses the following two research questions"},
+{w:"as described in Section X",pos:"phrase",cat:6,m:"X절에서 설명한 바와 같이. 내부 상호 참조",mo:"The effectiveness ... validated through ablation experiments in Section 4.",ex:"The effectiveness of each component ... validated through ablation experiments in Section 4"},
+{w:"is presented in Table X / Fig. X",pos:"phrase",cat:6,m:"표 X / 그림 X에 제시되어 있다. 독자를 시각 자료로 안내",mo:"The distribution ... is presented in Table 1. 결과 제시 표준 표현.",ex:"The distribution of extracted records by year is presented in Table 1"},
+{w:"carried forward to",pos:"phrase",cat:6,m:"다음 단계로 이어지다. 검증된 설정을 이후 실험에 적용",mo:"was carried forward to test set evaluation — 검증→테스트 세트 적용.",ex:"This configuration was carried forward to test set evaluation"},
+{w:"in this respect",pos:"phrase",cat:6,m:"이 점에서. 방금 논의한 측면을 가리킴",mo:"In this respect, this is a domain in which no single optimal solution exists.",ex:"In this respect, this is a domain in which no single optimal solution exists"},
+{w:"this section presents",pos:"phrase",cat:6,m:"이 섹션은 ~을 제시한다. 섹션 내용 예고",mo:"This section presents the prompt design strategy and the results of the model comparison.",ex:"This section presents the prompt design strategy and the results of the model comparison in turn"},
+{w:"will be discussed in",pos:"phrase",cat:6,m:"~에서 논의될 것이다. 이후 섹션 예고",mo:"Details ... are provided in Appendix B. 부록·다음 섹션으로 유도.",ex:"Details of the knowledge graph construction method are provided in Appendix B"},
+{w:"the goal of X is to",pos:"phrase",cat:6,m:"X의 목표는 ~이다. 섹션·모듈의 목적 명시",mo:"The goal of the retrieval module is to rank candidate passages.",ex:"The goal of the retrieval module is to rank candidate passages such that true parallel reading pairs appear in the top results"},
+{w:"as a foundation for",pos:"phrase",cat:6,m:"~의 기반으로서. 후속 연구·작업의 토대 역할",mo:"a parallel reading dataset that serves as a foundation for future research.",ex:"serves as a foundation for future research on the Imjin War"},
+// ── 7 데이터·처리 ──
+{w:"preprocessing",pos:"n.",cat:7,m:"특징 추출 전에 데이터를 정제·표준화하는 단계",mo:"date normalization + entity normalization — 두 가지 정규화.",ex:"Two forms of normalization were applied prior to feature extraction"},
+{w:"filtering criterion",pos:"n.",cat:7,m:"데이터 규모를 줄이기 위해 적용하는 선별 기준",mo:"military(군사) + diplomacy(외교) 태그 — 국사편찬위원회 분류 활용.",ex:"The database's existing subject classification tags are applied as a filtering criterion"},
+{w:"thematic reliability",pos:"n.",cat:7,m:"선별된 데이터가 연구 주제에 부합하는 정도",mo:"전문 역사학자가 설정한 분류 태그 → thematic reliability 확보.",ex:"ensures thematic reliability, as the classifications were established by professional historians"},
+{w:"subject classification tags",pos:"n.",cat:7,m:"데이터베이스의 주제별 분류 태그",mo:"군사·외교 태그 → 7,918개 세그먼트 선별.",ex:"The database's existing subject classification tags — specifically 'military' and 'diplomacy'"},
+{w:"scope reduction",pos:"n.",cat:7,m:"분석 효율성을 위해 대상 규모를 줄이는 작업",mo:"수십만 건 → 7,918건(조선실록), 250건(명실록)으로 축소.",ex:"scope reduction was necessary to ensure the efficiency of subsequent semantic analysis"},
+{w:"weakly supervised framework",pos:"n.",cat:7,m:"불완전한 신호로 작동하는 학습 프레임워크",mo:"Ming Shilu 군사 세그먼트 자동 추출에 적용.",ex:"The weakly supervised learning framework developed in prior research is applied"},
+{w:"query source",pos:"n.",cat:7,m:"검색의 출발점이 되는 입력 세그먼트",mo:"250개 Ming Shilu 세그먼트 — query source로 Joseon Sillok 검색.",ex:"These 250 segments serve as the query source in the Imjin War-Align pipeline"},
+{w:"candidate database",pos:"n.",cat:7,m:"검색 대상이 되는 후보 세그먼트 전체 집합",mo:"7,918개 Joseon Sillok 세그먼트 — candidate database.",ex:"constitute the primary candidate database for the parallel reading system"},
+{w:"unstructured format",pos:"n.",cat:7,m:"전산 처리가 어려운 비정형 데이터 형식",mo:"기존 자료집이 unstructured → 교차 사료 분석 불가.",ex:"these resources are largely provided in unstructured formats"},
+{w:"XML format",pos:"n.",cat:7,m:"확장 가능 마크업 언어. 구조화된 데이터 표현 형식",mo:"Joseon Sillok XML — 프로그래밍 방식 처리 가능, 원문 무결성 보존.",ex:"The Joseon Sillok corpus draws on the XML-format data made openly available"},
+{w:"open-ended relations",pos:"n.",cat:7,m:"미리 정의되지 않은 개방형 관계 유형",mo:"semi-closed strategy: 핵심 유형 고정 + open-ended relations 허용.",ex:"the model is permitted to generate open-ended relations to preserve semantic flexibility"},
+{w:"programmatic processing",pos:"n.",cat:7,m:"코드를 통한 자동화된 데이터 처리",mo:"XML 형식 → systematic programmatic processing 가능.",ex:"This open format allows for systematic programmatic processing"},
+// ── 8 비교·대조 ──
+{w:"diverge / divergence",pos:"v./n.",cat:8,m:"서로 다른 방향으로 나아가다 / 차이·분기",mo:"accounts inevitably diverge — 같은 사건의 서로 다른 기술.",ex:"their accounts of the same events inevitably diverge"},
+{w:"discrepancy",pos:"n.",cat:8,m:"불일치. 두 기록 간의 사실적·서술적 차이",mo:"gaps and discrepancies across the sources — 사료 비교의 핵심 관심사.",ex:"identifying gaps and discrepancies across the sources"},
+{w:"lexical overlap",pos:"n.",cat:8,m:"두 텍스트 간 공유되는 단어·어구의 비율",mo:"Type 1: 높음, Type 2: 낮음, Type 3: 최소. 유형 구분의 핵심 지표.",ex:"entries describing the same event frequently show minimal lexical overlap"},
+{w:"narrative perspective",pos:"n.",cat:8,m:"사건을 바라보고 서술하는 시각·관점",mo:"같은 사건도 narrative perspective에 따라 다르게 기술됨.",ex:"two passages share the same key entities, but differ in narrative perspective or level of detail"},
+{w:"paraphrase",pos:"n./v.",cat:8,m:"같은 내용을 다른 어휘로 표현한 것",mo:"paraphrase, shifts in narrative perspective — 어휘 통계 방법의 한계 원인.",ex:"when applied to historical narratives involving paraphrase, shifts in narrative perspective"},
+{w:"superficially unrelated",pos:"adj.",cat:8,m:"표면적으로는 무관해 보이는",mo:"같은 사건인데 어휘가 달라서 무관해 보임 → semantic gap 문제.",ex:"the two accounts may frame the same event in contrasting ways, making them appear superficially unrelated"},
+{w:"asymmetric structure",pos:"n.",cat:8,m:"두 사료 간의 비대칭적 기록 구조",mo:"Ming 1항목 = 평균 10.4개 Joseon 항목. Ming은 압축, Joseon은 개별 대응.",ex:"This asymmetric structure is explained by two interacting factors"},
+{w:"complementary",pos:"adj.",cat:8,m:"상호 보완적인. 서로의 약점을 보완하는",mo:"N-gram + LLM reasoning — 각각 다른 유형을 담당하며 상호 보완.",ex:"Statistical metrics and LLM reasoning function as complementary approaches"},
+{w:"formulaic phrases",pos:"n.",cat:8,m:"정형화된 문구. 관례적으로 반복되는 표현",mo:"군사·외교 기록의 fixed format → formulaic phrases → 검색 noise 유발.",ex:"Military and diplomatic entries tend to follow fixed formats, with certain terms appearing as formulaic phrases"},
+{w:"compression characteristic",pos:"n.",cat:8,m:"기록의 압축적 특성. 명 실록의 기사가 여러 사건을 합침",mo:"명 실록 1기사에 여러 요소 통합 → 조선실록 여러 기사와 대응.",ex:"The second factor is the compression characteristic of the Ming Shilu entry itself"},
+{w:"localized discrepancies",pos:"n.",cat:8,m:"특정 사건에 국한된 국부적 불일치",mo:"기존 연구는 개별 주제 조사에서 국부적 불일치만 발견.",ex:"these findings reveal only localized discrepancies between the two sources in specific events"},
+];
+
+let curCat=-1,known={},flipped={};
+const wmap={};
+V.forEach(v=>{wmap[v.w.replace(/[^a-zA-Z0-9]/g,'_')]=v.w;});
+
+function render(){
+  const q=document.getElementById('q').value.toLowerCase();
+  const items=V.filter(v=>{
+    const mc=curCat<0||v.cat===curCat;
+    const mq=!q||v.w.toLowerCase().includes(q)||v.m.includes(q)||v.mo.toLowerCase().includes(q);
+    return mc&&mq;
+  });
+  const kn=V.filter(v=>known[v.w]).length;
+  document.getElementById('sr').innerHTML=`
+    <div class="sc"><div class="sn">${V.length}</div><div class="sl">전체</div></div>
+    <div class="sc"><div class="sn">${kn}</div><div class="sl">완료</div></div>
+    <div class="sc"><div class="sn">${V.length-kn}</div><div class="sl">남은 것</div></div>
+    <div class="sc"><div class="sn">${items.length}</div><div class="sl">표시 중</div></div>
+  `;
+  const g=document.getElementById('g');
+  if(!items.length){g.innerHTML='<div class="empty">검색 결과 없음</div>';return;}
+  g.innerHTML=items.map(v=>{
+    const id=v.w.replace(/[^a-zA-Z0-9]/g,'_');
+    const isF=flipped[v.w],isK=known[v.w];
+    return `<div class="card${isF?' fl':''}" onclick="flip('${id}')">
+      <div class="front">
+        <div class="ch"><span class="wd">${v.w}</span><span class="bg ${BC[v.cat]}">${CATS[v.cat]}</span></div>
+        <div class="ps">${v.pos}</div>
+        <div class="mn">${v.m}</div>
+        ${v.ex?`<div class="ex">${v.ex}</div>`:''}
+        <div class="ht">탭 → 메모</div>
+      </div>
+      <div class="back">
+        <div class="ch"><span class="wd">${v.w}</span><span class="bg ${BC[v.cat]}">${CATS[v.cat]}</span></div>
+        <div class="ps">${v.pos} — ${v.m}</div>
+        <div class="mo">${v.mo}</div>
+        <button class="kb${isK?' done':''}" onclick="mk(event,'${id}')">${isK?'✓ 완료':'완료 표시'}</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function flip(id){flipped[wmap[id]]=!flipped[wmap[id]];render();}
+function mk(e,id){e.stopPropagation();known[wmap[id]]=!known[wmap[id]];render();}
+const fr=document.getElementById('fr');
+fr.innerHTML='<button class="fb on" data-c="-1" onclick="sc(-1)">전체</button>'+
+  CATS.map((c,i)=>`<button class="fb" data-c="${i}" onclick="sc(${i})">${c}</button>`).join('');
+function sc(i){curCat=i;document.querySelectorAll('.fb').forEach(b=>b.classList.toggle('on',+b.dataset.c===i));render();}
+render();
+</script>

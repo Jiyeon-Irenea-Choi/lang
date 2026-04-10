@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>중국어 접속사 스터디</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#F0EBE3;display:flex;justify-content:center;align-items:flex-start;padding:40px 20px;min-height:100vh;font-family:'Noto Sans KR',sans-serif;}
+.outer{width:540px;}
+.pages{position:relative;overflow:hidden;}
+.page{width:540px;min-width:540px;position:absolute;top:0;left:0;transition:transform 0.4s cubic-bezier(.7,0,.2,1);}
+.card{background:#FFFBF5;border-radius:28px;border:2.5px solid #F0E2D0;padding:24px 22px 20px;position:relative;overflow:hidden;}
+.deco{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;}
+.badge{display:inline-flex;align-items:center;background:#EDE4FF;color:#6B5FD0;font-size:10px;font-weight:800;letter-spacing:.08em;padding:4px 13px;border-radius:20px;margin-bottom:11px;}
+.ttl{font-size:18px;font-weight:900;color:#2D2D2D;margin-bottom:2px;}
+.ttl em{color:#7B6EDB;font-style:normal;}
+.sub{font-size:11px;color:#BBB;margin-bottom:14px;}
+.footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px;}
+.tags{font-size:10px;color:#C8B8A8;}
+.nav-dots{display:flex;gap:5px;}
+.ndot{width:7px;height:7px;border-radius:50%;background:#E0CFC4;cursor:pointer;transition:.2s;}
+.ndot.on{background:#7B6EDB;width:20px;border-radius:4px;}
+
+.map-holder{position:relative;height:400px;width:100%;}
+.map-svg{position:absolute;top:0;left:0;width:100%;height:100%;overflow:visible;}
+.c-node{position:absolute;width:92px;height:92px;border-radius:50%;background:#7B6EDB;display:flex;flex-direction:column;align-items:center;justify-content:center;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10;box-shadow:0 4px 18px rgba(123,110,219,.3);}
+.c-ko{font-size:13px;font-weight:900;color:#fff;line-height:1.3;text-align:center;}
+.leaf{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:18px;padding:9px 12px;z-index:10;width:114px;text-align:center;}
+.lf-char{font-size:13px;font-weight:900;line-height:1.3;}
+.lf-py{font-size:9px;font-style:italic;opacity:.65;margin:2px 0 3px;}
+.lf-ko{font-size:10.5px;font-weight:800;line-height:1.3;}
+.lf-desc{font-size:9px;color:#999;margin-top:2px;line-height:1.45;}
+.la{background:#F3F0FF;border:2px solid #C9C0F5;} .la .lf-char,.la .lf-ko{color:#7B6EDB;} .la .lf-py{color:#9B90E0;}
+.lb{background:#EEF4FF;border:2px solid #B0C9F7;} .lb .lf-char,.lb .lf-ko{color:#3A7BD5;} .lb .lf-py{color:#6BA3E8;}
+.lc{background:#FFF0F3;border:2px solid #F7C5D0;} .lc .lf-char,.lc .lf-ko{color:#D95F7A;} .lc .lf-py{color:#E893A6;}
+.ld{background:#EDFAF5;border:2px solid #A8E6CE;} .ld .lf-char,.ld .lf-ko{color:#2BAF7A;} .ld .lf-py{color:#5AC99A;}
+
+.tab-bar{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
+.tab{font-size:10.5px;font-weight:700;padding:5px 12px;border-radius:20px;cursor:pointer;border:1.5px solid #E8DEFF;transition:.2s;color:#AAA;background:#F5F2FF;}
+.tab.on{color:#fff;}
+.tab.t0.on{background:#7B6EDB;border-color:#7B6EDB;}
+.tab.t1.on{background:#3A7BD5;border-color:#3A7BD5;}
+.tab.t2.on{background:#D95F7A;border-color:#D95F7A;}
+.tab.t3.on{background:#2BAF7A;border-color:#2BAF7A;}
+
+.ex-panel{display:none;flex-direction:column;gap:9px;margin-bottom:14px;}
+.ex-panel.show{display:flex;}
+.ex-card{border-radius:16px;padding:12px 15px;position:relative;}
+.ex-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:4px 0 0 4px;}
+.pa .ex-card{background:#F3F0FF;} .pa .ex-card::before{background:#7B6EDB;}
+.pb .ex-card{background:#EEF4FF;} .pb .ex-card::before{background:#3A7BD5;}
+.pc .ex-card{background:#FFF0F3;} .pc .ex-card::before{background:#D95F7A;}
+.pd .ex-card{background:#EDFAF5;} .pd .ex-card::before{background:#2BAF7A;}
+.ex-word-row{display:flex;align-items:center;gap:7px;margin-bottom:6px;}
+.ex-char{font-size:15px;font-weight:900;}
+.pa .ex-char{color:#7B6EDB;} .pb .ex-char{color:#3A7BD5;} .pc .ex-char{color:#D95F7A;} .pd .ex-char{color:#2BAF7A;}
+.ex-tag{font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:10px;}
+.pa .ex-tag{background:#DDD8F8;color:#5A4DC0;}
+.pb .ex-tag{background:#CCE0FF;color:#2059B0;}
+.pc .ex-tag{background:#FFD6E0;color:#C04060;}
+.pd .ex-tag{background:#C8F0E0;color:#1A8A5E;}
+.ex-zh{font-size:12.5px;font-weight:700;color:#2D2D2D;margin-bottom:4px;line-height:1.6;}
+.ex-ko{font-size:11px;color:#888;line-height:1.5;}
+.ex-ko strong{color:#555;font-weight:700;}
+.ex-tip{font-size:10px;margin-top:5px;padding:5px 10px;border-radius:8px;line-height:1.5;}
+.pa .ex-tip{background:#EDE8FF;color:#7B6EDB;}
+.pb .ex-tip{background:#E0ECFF;color:#3A7BD5;}
+.pc .ex-tip{background:#FFE8EE;color:#D95F7A;}
+.pd .ex-tip{background:#DFF5EB;color:#2BAF7A;}
+.back-btn{font-size:11px;color:#7B6EDB;background:#EDE8FF;border:none;border-radius:12px;padding:5px 13px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-weight:700;}
+</style>
+</head>
+<body>
+<div class="outer">
+<div class="pages" id="pages">
+
+<div class="page" id="pg1">
+<div class="card">
+  <svg class="deco" viewBox="0 0 540 520" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="480" cy="50" r="80" fill="#EDE4FF" opacity=".5"/>
+    <circle cx="50" cy="460" r="60" fill="#E8F0FF" opacity=".45"/>
+    <circle cx="510" cy="380" r="40" fill="#FFF0F3" opacity=".45"/>
+    <circle cx="25" cy="100" r="3" fill="#C9C0F5" opacity=".6"/>
+    <circle cx="515" cy="150" r="3.5" fill="#B0C9F7" opacity=".5"/>
+    <circle cx="20" cy="300" r="2.5" fill="#F7C5D0" opacity=".5"/>
+    <circle cx="522" cy="280" r="3" fill="#A8E6CE" opacity=".5"/>
+    <path d="M12 170 Q22 165 17 175 Q27 168 22 178" stroke="#C9C0F5" stroke-width="1.5" fill="none" opacity=".5"/>
+    <path d="M518 110 Q528 105 523 115 Q533 108 528 118" stroke="#B0C9F7" stroke-width="1.5" fill="none" opacity=".45"/>
+    <path d="M505 440 Q515 435 510 445 Q520 438 515 448" stroke="#F7C5D0" stroke-width="1.5" fill="none" opacity=".45"/>
+  </svg>
+  <div class="badge">중국어 접속사 스터디 · 01</div>
+  <div class="ttl">'<em>~지만·~에도 불구하고</em>'</div>
+  <div class="sub">역접·양보 접속사, 상황따라 완전히 달라요</div>
+  <div class="map-holder" id="mapHolder">
+    <svg class="map-svg" id="mapSvg" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="c-node"><div class="c-ko">~지만<br>~에도<br>불구하고</div></div>
+    <div class="leaf la" id="lf0"><div class="lf-char">但是 / 可是<br>不过</div><div class="lf-py">dànshì / kěshì / búguò</div><div class="lf-ko">단순 대조</div><div class="lf-desc">~하지만, 그렇긴 한데</div></div>
+    <div class="leaf lb" id="lf1"><div class="lf-char">虽然…但是</div><div class="lf-py">suīrán…dànshì</div><div class="lf-ko">사실 양보</div><div class="lf-desc">비록 ~이긴 하지만<br>이미 일어난 사실</div></div>
+    <div class="leaf lc" id="lf2"><div class="lf-char">哪怕 / 即使<br>…也</div><div class="lf-py">nǎpà / jíshǐ…yě</div><div class="lf-ko">강한 가정 양보</div><div class="lf-desc">설령 ~할지라도<br>아무리 ~해도</div></div>
+    <div class="leaf ld" id="lf3"><div class="lf-char">尽管…还是<br>再…也</div><div class="lf-py">jǐnguǎn…háishi</div><div class="lf-ko">결과 불변 강조</div><div class="lf-desc">~에도 불구하고<br>결과가 여전히</div></div>
+  </div>
+  <div class="footer">
+    <div class="tags">#중국어 #접속사 #문법 #역접 #양보</div>
+    <div class="nav-dots"><div class="ndot on" onclick="goPage(0)"></div><div class="ndot" onclick="goPage(1)"></div></div>
+  </div>
+</div>
+</div>
+
+<div class="page" id="pg2">
+<div class="card">
+  <svg class="deco" viewBox="0 0 540 640" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="480" cy="50" r="70" fill="#EDE4FF" opacity=".5"/>
+    <circle cx="50" cy="600" r="55" fill="#EDFAF5" opacity=".45"/>
+    <circle cx="25" cy="90" r="3" fill="#C9C0F5" opacity=".6"/>
+    <circle cx="516" cy="200" r="3.5" fill="#B0C9F7" opacity=".5"/>
+    <path d="M12 200 Q22 195 17 205 Q27 198 22 208" stroke="#A8E6CE" stroke-width="1.5" fill="none" opacity=".5"/>
+    <path d="M518 130 Q528 125 523 135 Q533 128 528 138" stroke="#C9C0F5" stroke-width="1.5" fill="none" opacity=".45"/>
+  </svg>
+  <div class="badge">중국어 접속사 스터디 · 02</div>
+  <div class="ttl"><em>예문</em>으로 감 잡기</div>
+  <div class="sub">탭을 눌러 상황별 표현을 확인해요</div>
+  <div class="tab-bar">
+    <div class="tab t0 on" onclick="showTab(0)">단순 대조</div>
+    <div class="tab t1" onclick="showTab(1)">사실 양보</div>
+    <div class="tab t2" onclick="showTab(2)">강한 가정</div>
+    <div class="tab t3" onclick="showTab(3)">결과 불변</div>
+  </div>
+  <div class="ex-panel pa show" id="tab0">
+    <div class="ex-card"><div class="ex-word-row"><span class="ex-char">但是</span><span class="ex-tag">dànshì · 가장 기본</span></div><div class="ex-zh">他很聪明，<strong style="color:#C4B8FF">但是</strong>不努力。</div><div class="ex-ko">그는 똑똑<strong>하지만</strong> 노력을 안 해.</div><div class="ex-tip">구어·문어 둘 다 자연스러운 가장 무난한 선택</div></div>
+    <div class="ex-card"><div class="ex-word-row"><span class="ex-char">可是</span><span class="ex-tag">kěshì · 아쉬운 느낌</span></div><div class="ex-zh">我想去，<strong style="color:#C4B8FF">可是</strong>没时间。</div><div class="ex-ko">가고 싶은<strong>데</strong> 시간이 없어.</div><div class="ex-tip">但是보다 감정이 살짝 섞임 — 아쉬움, 안타까움</div></div>
+    <div class="ex-card"><div class="ex-word-row"><span class="ex-char">不过</span><span class="ex-tag">búguò · 부드러운 전환</span></div><div class="ex-zh">贵是贵，<strong style="color:#C4B8FF">不过</strong>质量很好。</div><div class="ex-ko">비싸긴 <strong>한데</strong>, 품질은 좋아.</div><div class="ex-tip">"그렇긴 하지만..." 말을 부드럽게 돌릴 때</div></div>
+  </div>
+  <div class="ex-panel pb" id="tab1">
+    <div class="ex-card"><div class="ex-word-row"><span class="ex-char">虽然…但是</span><span class="ex-tag">suīrán…dànshì</span></div><div class="ex-zh"><strong style="color:#7ACFDF">虽然</strong>很累，<strong style="color:#7ACFDF">但是</strong>还是坚持下去了。</div><div class="ex-ko"><strong>비록</strong> 힘들었<strong>지만</strong> 그래도 버텼어.</div><div class="ex-tip">이미 일어난 사실. 뒤에 但是·却·还是 중 하나 필수</div></div>
+    <div class="ex-card"><div class="ex-word-row"><span class="ex-char">虽然…却</span><span class="ex-tag">suīrán…què · 반전 강조</span></div><div class="ex-zh"><strong style="color:#7ACFDF">虽然</strong>认识很久了，<strong style="color:#7ACFDF">却</strong>从没说过话。</div><div class="ex-ko"><strong>비록</strong> 오래 알았<strong>지만</strong> 한 번도 말을 나눈 적 없어.</div><div class="ex-tip">却는 但是보다 반전·의외의 느낌을 더 강하게 줌</div></div>
+  </div>
+  <div class="ex-panel pc" id="tab2">
+    <div class="ex-card"><div class="ex-word-row"><span class="ex-char">即使…也</span><span class="ex-tag">jíshǐ…yě · 가정적</span></div><div class="ex-zh"><strong style="color:#DF8FD0">即使</strong>失败了，我<strong style="color:#DF8FD0">也</strong>不后悔。</div><div class="ex-ko"><strong>설령</strong> 실패해<strong>도</strong> 후회하지 않아.</div><div class="ex-tip">아직 일어나지 않은 가정 상황에 씀</div></div>
+    <div class="ex-card"><div class="ex-word-row"><span class="ex-char">哪怕…也</span><span class="ex-tag">nǎpà…yě · 감정적</span></div><div class="ex-zh"><strong style="color:#DF8FD0">哪怕</strong>只有一点点希望，我<strong style="color:#DF8FD0">也</strong>要试试。</div><div class="ex-ko"><strong>아무리</strong> 희망이 조금뿐이어<strong>도</strong> 해볼 거야.</div><div class="ex-tip">即使보다 감정이 훨씬 강함. 절박함·의지가 느껴짐</div></div>
+    <div class="ex-card"><div class="ex-word-row"><span class="ex-char">就算…也</span><span class="ex-tag">jiùsuàn…yě · 구어체</span></div><div class="ex-zh"><strong style="color:#DF8FD0">就算</strong>你不说，我<strong style="color:#DF8FD0">也</strong>知道。</div><div class="ex-ko"><strong>설령</strong> 네가 말 안 해<strong>도</strong> 나는 알아.</div><div class="ex-tip">即使와 비슷하지만 더 구어체. 일상 대화에서 자주</div></div>
+  </div>
+  <div class="ex-panel pd" id="tab3">
+    <div class="ex-card"><div class="ex-word-row"><span class="ex-char">尽管…还是</span><span class="ex-tag">jǐnguǎn…háishi</span></div><div class="ex-zh"><strong style="color:#80CF90">尽管</strong>下雨，他<strong style="color:#80CF90">还是</strong>来了。</div><div class="ex-ko"><strong>비가 왔음에도 불구하고</strong> 그는 <strong>여전히</strong> 왔어.</div><div class="ex-tip">장애물이 있어도 결과가 변하지 않음을 강조</div></div>
+    <div class="ex-card"><div class="ex-word-row"><span class="ex-char">再…也</span><span class="ex-tag">zài…yě · 아무리</span></div><div class="ex-zh"><strong style="color:#80CF90">再</strong>忙<strong style="color:#80CF90">也</strong>要吃饭。</div><div class="ex-ko"><strong>아무리</strong> 바빠<strong>도</strong> 밥은 먹어야지.</div><div class="ex-tip">정도의 극단을 표현. "아무리 ~해도 이것만은"</div></div>
+  </div>
+  <div class="footer">
+    <button class="back-btn" onclick="goPage(0)">← 어휘 보기</button>
+    <div class="nav-dots"><div class="ndot" onclick="goPage(0)"></div><div class="ndot on" onclick="goPage(1)"></div></div>
+  </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<script>
+let cur=0;
+function goPage(n){
+  cur=n;
+  document.querySelectorAll('.page').forEach((p,i)=>p.style.transform=`translateX(${(i-n)*100}%)`);
+  document.querySelectorAll('.ndot').forEach((d,i)=>d.classList.toggle('on',i%2===n));
+  setTimeout(()=>{ document.getElementById('pages').style.height=document.getElementById('pg'+(n+1)).offsetHeight+'px'; },50);
+}
+function showTab(n){
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('on',i===n));
+  document.querySelectorAll('.ex-panel').forEach((p,i)=>p.classList.toggle('show',i===n));
+  setTimeout(()=>{ document.getElementById('pages').style.height=document.getElementById('pg2').offsetHeight+'px'; },30);
+}
+function layoutMap(){
+  const holder=document.getElementById('mapHolder');
+  const svg=document.getElementById('mapSvg');
+  const W=holder.offsetWidth,H=holder.offsetHeight;
+  const cx=W/2,cy=H/2;
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  svg.innerHTML='';
+  const leaves=[0,1,2,3].map(i=>document.getElementById('lf'+i));
+  const radius=Math.min(W,H)*0.37;
+  const colors=['#6B5FD0','#3A8FA0','#9A5090','#4A9050'];
+  leaves.forEach((leaf,i)=>{
+    const angle=(-90+i*(360/4))*Math.PI/180;
+    const lw=leaf.offsetWidth,lh=leaf.offsetHeight;
+    const lx=cx+Math.cos(angle)*radius-lw/2;
+    const ly=cy+Math.sin(angle)*radius-lh/2;
+    leaf.style.left=lx+'px'; leaf.style.top=ly+'px';
+    const sx=cx+Math.cos(angle)*48,sy=cy+Math.sin(angle)*48;
+    const ex=lx+lw/2-Math.cos(angle)*14,ey=ly+lh/2-Math.sin(angle)*14;
+    const mx=(sx+ex)/2-Math.sin(angle)*20,my=(sy+ey)/2+Math.cos(angle)*20;
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d',`M${sx},${sy} Q${mx},${my} ${ex},${ey}`);
+    path.setAttribute('stroke',colors[i]); path.setAttribute('stroke-width','2');
+    path.setAttribute('fill','none'); path.setAttribute('stroke-dasharray','5 4');
+    path.setAttribute('stroke-linecap','round'); svg.appendChild(path);
+    const dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    dot.setAttribute('cx',ex); dot.setAttribute('cy',ey);
+    dot.setAttribute('r','3.5'); dot.setAttribute('fill',colors[i]); svg.appendChild(dot);
+  });
+}
+window.addEventListener('load',()=>{
+  document.querySelectorAll('.page').forEach((p,i)=>p.style.transform=`translateX(${i*100}%)`);
+  setTimeout(()=>{ layoutMap(); document.getElementById('pages').style.height=document.getElementById('pg1').offsetHeight+'px'; },100);
+});
+window.addEventListener('resize',layoutMap);
+</script>
+</body>
+</html>

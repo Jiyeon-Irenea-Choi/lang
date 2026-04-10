@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>기준 중국어 어휘 스터디</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#F5EDE3;display:flex;justify-content:center;align-items:flex-start;padding:40px 20px;min-height:100vh;font-family:'Noto Sans KR',sans-serif;}
+.outer{width:540px;}
+.pages{position:relative;overflow:hidden;}
+.page{width:540px;min-width:540px;position:absolute;top:0;left:0;transition:transform 0.4s cubic-bezier(.7,0,.2,1);}
+
+/* SHARED */
+.card-wrap{
+  background:#FFFBF5;border-radius:28px;border:2.5px solid #F0E2D0;
+  padding:26px 22px 22px;position:relative;overflow:hidden;
+}
+.deco-bg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;}
+.badge{
+  display:inline-flex;align-items:center;
+  background:#FFE5D6;color:#C4614A;
+  font-size:10px;font-weight:800;letter-spacing:.08em;
+  padding:4px 13px;border-radius:20px;margin-bottom:12px;
+}
+.nav-dots{display:flex;gap:5px;align-items:center;}
+.ndot{width:7px;height:7px;border-radius:50%;background:#E0CFC4;cursor:pointer;transition:.2s;}
+.ndot.on{background:#E07A5F;width:20px;border-radius:4px;}
+.tags{font-size:10.5px;color:#C8B8A8;}
+.footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px;}
+
+/* PAGE 1 */
+.p1-title{font-size:18px;font-weight:900;color:#2D2D2D;margin-bottom:2px;}
+.p1-title em{color:#E07A5F;font-style:normal;}
+.p1-sub{font-size:11px;color:#BBB;margin-bottom:10px;}
+.map-holder{position:relative;height:400px;width:100%;}
+.map-svg{position:absolute;top:0;left:0;width:100%;height:100%;overflow:visible;}
+.c-node{
+  position:absolute;width:96px;height:96px;border-radius:50%;
+  background:#E07A5F;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  top:50%;left:50%;transform:translate(-50%,-50%);z-index:10;
+  box-shadow:0 4px 20px rgba(224,122,95,.3);
+}
+.c-node-ko{font-size:21px;font-weight:900;color:#fff;line-height:1;}
+.c-node-hint{font-size:9.5px;color:rgba(255,255,255,.65);margin-top:2px;}
+.leaf{
+  position:absolute;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  border-radius:20px;padding:9px 13px;z-index:10;
+  width:108px;text-align:center;
+}
+.lf-char{font-size:21px;font-weight:900;line-height:1.1;}
+.lf-py{font-size:9.5px;font-style:italic;margin:2px 0 4px;opacity:.7;}
+.lf-ko{font-size:11px;font-weight:800;line-height:1.3;}
+.lf-desc{font-size:9.5px;color:#999;margin-top:2px;line-height:1.45;}
+.la{background:#FFF0F3;border:2px solid #F7C5D0;} .la .lf-char,.la .lf-ko{color:#D95F7A;} .la .lf-py{color:#E893A6;}
+.lb{background:#F3F0FF;border:2px solid #C9C0F5;} .lb .lf-char,.lb .lf-ko{color:#7B6EDB;} .lb .lf-py{color:#9B90E0;}
+.lc{background:#EDFAF5;border:2px solid #A8E6CE;} .lc .lf-char,.lc .lf-ko{color:#2BAF7A;} .lc .lf-py{color:#5AC99A;}
+.ld{background:#FFF5E6;border:2px solid #FFD5A0;} .ld .lf-char,.ld .lf-ko{color:#D4841A;} .ld .lf-py{color:#E0A84A;}
+.le{background:#EEF4FF;border:2px solid #B0C9F7;} .le .lf-char,.le .lf-ko{color:#3A7BD5;} .le .lf-py{color:#6BA3E8;}
+.lf-node{background:#F5EDFF;border:2px solid #DDB8F7;} .lf-node .lf-char,.lf-node .lf-ko{color:#9B50D0;} .lf-node .lf-py{color:#BB80E8;}
+
+/* PAGE 2 */
+.p2-title{font-size:17px;font-weight:900;color:#2D2D2D;margin-bottom:2px;}
+.p2-title em{color:#E07A5F;font-style:normal;}
+.p2-sub{font-size:11px;color:#BBB;margin-bottom:14px;}
+.ex-list{display:flex;flex-direction:column;gap:9px;margin-bottom:14px;}
+.ex-card{border-radius:16px;padding:11px 15px;position:relative;overflow:hidden;}
+.ex-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:4px 0 0 4px;}
+.ea{background:#FFF0F3;} .ea::before{background:#D95F7A;}
+.eb{background:#F3F0FF;} .eb::before{background:#7B6EDB;}
+.ec{background:#EDFAF5;} .ec::before{background:#2BAF7A;}
+.ed{background:#FFF5E6;} .ed::before{background:#D4841A;}
+.ee{background:#EEF4FF;} .ee::before{background:#3A7BD5;}
+.ex-word-row{display:flex;align-items:center;gap:7px;margin-bottom:5px;}
+.ex-char{font-size:16px;font-weight:900;}
+.ea .ex-char{color:#D95F7A;} .eb .ex-char{color:#7B6EDB;}
+.ec .ex-char{color:#2BAF7A;} .ed .ex-char{color:#D4841A;} .ee .ex-char{color:#3A7BD5;}
+.ex-ko-tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;}
+.ea .ex-ko-tag{background:#FFD6E0;color:#C04060;}
+.eb .ex-ko-tag{background:#DDD8F8;color:#5A4DC0;}
+.ec .ex-ko-tag{background:#C8F0E0;color:#1A8A5E;}
+.ed .ex-ko-tag{background:#FFE5B8;color:#A86010;}
+.ee .ex-ko-tag{background:#CCE0FF;color:#2059B0;}
+.ex-zh{font-size:13px;font-weight:700;color:#2D2D2D;margin-bottom:3px;line-height:1.5;}
+.ex-ko-sent{font-size:11.5px;color:#888;line-height:1.5;}
+.ex-ko-sent strong{color:#555;font-weight:700;}
+.back-btn{
+  font-size:11px;color:#C4614A;background:#FFE5D6;
+  border:none;border-radius:12px;padding:5px 13px;cursor:pointer;
+  font-family:'Noto Sans KR',sans-serif;font-weight:700;
+}
+</style>
+</head>
+<body>
+<div class="outer">
+<div class="pages" id="pages">
+
+<!-- PAGE 1 -->
+<div class="page" id="pg1">
+<div class="card-wrap">
+  <svg class="deco-bg" viewBox="0 0 540 520" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="490" cy="60" r="55" fill="#F9E8DF" opacity=".5"/>
+    <circle cx="50" cy="440" r="45" fill="#E8F5ED" opacity=".5"/>
+    <circle cx="510" cy="400" r="35" fill="#EEE8FC" opacity=".45"/>
+    <circle cx="30" cy="80" r="3.5" fill="#F7C5D0" opacity=".6"/>
+    <circle cx="510" cy="150" r="4" fill="#C9C0F5" opacity=".55"/>
+    <circle cx="20" cy="300" r="3" fill="#A8E6CE" opacity=".55"/>
+    <circle cx="520" cy="330" r="3.5" fill="#FFD5A0" opacity=".6"/>
+    <path d="M15 160 Q25 155 20 165 Q30 158 25 168" stroke="#F7C5D0" stroke-width="1.5" fill="none" opacity=".6"/>
+    <path d="M515 100 Q525 95 520 105 Q530 98 525 108" stroke="#C9C0F5" stroke-width="1.5" fill="none" opacity=".6"/>
+  </svg>
+
+  <div class="badge">중국어 어휘 스터디 · 01</div>
+  <div class="p1-title">'<em>기준</em>'을 중국어로?</div>
+  <div class="p1-sub">한국어 기준 하나 = 상황에 따라 다른 단어들</div>
+
+  <div class="map-holder" id="mapHolder">
+    <svg class="map-svg" id="mapSvg" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="c-node" id="cnode">
+      <div class="c-node-ko">기준</div>
+      <div class="c-node-hint">基準</div>
+    </div>
+    <div class="leaf la" id="lf0"><div class="lf-char">标准</div><div class="lf-py">biāozhǔn</div><div class="lf-ko">표준·기준</div><div class="lf-desc">규정된 기준<br>가장 범용적</div></div>
+    <div class="leaf lb" id="lf1"><div class="lf-char">原则</div><div class="lf-py">yuánzé</div><div class="lf-ko">원칙</div><div class="lf-desc">타협 불가<br>신념·방침</div></div>
+    <div class="leaf lc" id="lf2"><div class="lf-char">准则</div><div class="lf-py">zhǔnzé</div><div class="lf-ko">준칙·규범</div><div class="lf-desc">행동·윤리<br>따르는 룰</div></div>
+    <div class="leaf ld" id="lf3"><div class="lf-char">尺度</div><div class="lf-py">chǐdù</div><div class="lf-ko">척도·잣대</div><div class="lf-desc">가치 판단<br>비유적 잣대</div></div>
+    <div class="leaf le" id="lf4"><div class="lf-char">依据</div><div class="lf-py">yījù</div><div class="lf-ko">근거·토대</div><div class="lf-desc">판단의 근거<br>이걸 토대로</div></div>
+    <div class="leaf lf-node" id="lf5"><div class="lf-char">衡量</div><div class="lf-py">héngliáng</div><div class="lf-ko">평가·측정</div><div class="lf-desc">저울질하다<br>비교 기준</div></div>
+  </div>
+
+  <div class="footer">
+    <div class="tags">#중국어 #어휘 #기준 #HSK</div>
+    <div class="nav-dots">
+      <div class="ndot on" onclick="goPage(0)"></div>
+      <div class="ndot" onclick="goPage(1)"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page" id="pg2">
+<div class="card-wrap">
+  <svg class="deco-bg" viewBox="0 0 540 620" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="490" cy="50" r="50" fill="#F9E8DF" opacity=".45"/>
+    <circle cx="40" cy="580" r="40" fill="#EEE8FC" opacity=".4"/>
+    <circle cx="30" cy="80" r="3.5" fill="#F7C5D0" opacity=".6"/>
+    <circle cx="515" cy="200" r="3.5" fill="#C9C0F5" opacity=".55"/>
+    <circle cx="520" cy="420" r="3" fill="#FFD5A0" opacity=".55"/>
+    <path d="M15 200 Q25 195 20 205 Q30 198 25 208" stroke="#A8E6CE" stroke-width="1.5" fill="none" opacity=".6"/>
+    <path d="M518 130 Q528 125 523 135 Q533 128 528 138" stroke="#F7C5D0" stroke-width="1.5" fill="none" opacity=".6"/>
+  </svg>
+
+  <div class="badge">중국어 어휘 스터디 · 02</div>
+  <div class="p2-title"><em>예문</em>으로 감 잡기</div>
+  <div class="p2-sub">각 단어를 문장에서 어떻게 쓸까?</div>
+
+  <div class="ex-list">
+    <div class="ex-card ea">
+      <div class="ex-word-row"><span class="ex-char">标准</span><span class="ex-ko-tag">규정된 기준</span></div>
+      <div class="ex-zh">这不符合我的<strong style="color:#D95F7A">标准</strong>。</div>
+      <div class="ex-ko-sent">이건 내 <strong>기준</strong>에 맞지 않아.</div>
+    </div>
+    <div class="ex-card eb">
+      <div class="ex-word-row"><span class="ex-char">原则</span><span class="ex-ko-tag">신념·원칙</span></div>
+      <div class="ex-zh">这是我的<strong style="color:#7B6EDB">原则</strong>，不能妥协。</div>
+      <div class="ex-ko-sent">이건 내 <strong>원칙</strong>이라 타협할 수 없어.</div>
+    </div>
+    <div class="ex-card ec">
+      <div class="ex-word-row"><span class="ex-char">准则</span><span class="ex-ko-tag">행동 규범</span></div>
+      <div class="ex-zh">诚实是我做人的<strong style="color:#2BAF7A">准则</strong>。</div>
+      <div class="ex-ko-sent">정직이 내 삶의 <strong>준칙</strong>이야.</div>
+    </div>
+    <div class="ex-card ed">
+      <div class="ex-word-row"><span class="ex-char">尺度</span><span class="ex-ko-tag">가치 잣대</span></div>
+      <div class="ex-zh">这是我唯一的<strong style="color:#D4841A">尺度</strong>。</div>
+      <div class="ex-ko-sent">이게 내 유일한 <strong>잣대</strong>야.</div>
+    </div>
+    <div class="ex-card ee">
+      <div class="ex-word-row"><span class="ex-char">依据</span><span class="ex-ko-tag">판단 근거</span></div>
+      <div class="ex-zh">你的判断<strong style="color:#3A7BD5">依据</strong>是什么？</div>
+      <div class="ex-ko-sent">네 <strong>판단 근거</strong>가 뭐야?</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <button class="back-btn" onclick="goPage(0)">← 어휘 보기</button>
+    <div class="nav-dots">
+      <div class="ndot" onclick="goPage(0)"></div>
+      <div class="ndot on" onclick="goPage(1)"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<script>
+let cur = 0;
+
+function goPage(n) {
+  cur = n;
+  document.querySelectorAll('.page').forEach((p,i) => {
+    p.style.transform = `translateX(${(i-n)*100}%)`;
+  });
+  document.querySelectorAll('.ndot').forEach((d,i) => {
+    d.classList.toggle('on', i%2 === n);
+  });
+  // update pages height
+  const activePage = document.getElementById('pg'+(n+1));
+  document.getElementById('pages').style.height = activePage.offsetHeight + 'px';
+}
+
+function layoutMap() {
+  const holder = document.getElementById('mapHolder');
+  const svg = document.getElementById('mapSvg');
+  const W = holder.offsetWidth, H = holder.offsetHeight;
+  const cx = W/2, cy = H/2;
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  svg.innerHTML = '';
+  const leaves = [0,1,2,3,4,5].map(i => document.getElementById('lf'+i));
+  const radius = Math.min(W,H) * 0.36;
+  const colors = ['#F7C5D0','#C9C0F5','#A8E6CE','#FFD5A0','#B0C9F7','#DDB8F7'];
+  leaves.forEach((leaf,i) => {
+    const angle = (-90 + i*(360/6)) * Math.PI/180;
+    const lw = leaf.offsetWidth, lh = leaf.offsetHeight;
+    const lx = cx + Math.cos(angle)*radius - lw/2;
+    const ly = cy + Math.sin(angle)*radius - lh/2;
+    leaf.style.left = lx+'px';
+    leaf.style.top  = ly+'px';
+    const sx = cx + Math.cos(angle)*50, sy = cy + Math.sin(angle)*50;
+    const ex = lx+lw/2 - Math.cos(angle)*14, ey = ly+lh/2 - Math.sin(angle)*14;
+    const mx = (sx+ex)/2 - Math.sin(angle)*18, my = (sy+ey)/2 + Math.cos(angle)*18;
+    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d',`M${sx},${sy} Q${mx},${my} ${ex},${ey}`);
+    path.setAttribute('stroke',colors[i]);
+    path.setAttribute('stroke-width','2.5');
+    path.setAttribute('fill','none');
+    path.setAttribute('stroke-dasharray','5 4');
+    path.setAttribute('stroke-linecap','round');
+    svg.appendChild(path);
+    const dot = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    dot.setAttribute('cx',ex); dot.setAttribute('cy',ey);
+    dot.setAttribute('r','3.5'); dot.setAttribute('fill',colors[i]);
+    svg.appendChild(dot);
+  });
+}
+
+window.addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p,i) => {
+    p.style.transform = `translateX(${i*100}%)`;
+  });
+  const h = document.getElementById('pg1').offsetHeight;
+  document.getElementById('pages').style.height = h + 'px';
+  layoutMap();
+});
+window.addEventListener('resize', layoutMap);
+</script>
+</body>
+</html>

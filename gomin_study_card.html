@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>고민 중국어 어휘 스터디</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#E8F5EF;display:flex;justify-content:center;align-items:flex-start;padding:40px 20px;min-height:100vh;font-family:'Noto Sans KR',sans-serif;}
+.outer{width:540px;}
+.pages{position:relative;overflow:hidden;}
+.page{width:540px;min-width:540px;position:absolute;top:0;left:0;transition:transform 0.4s cubic-bezier(.7,0,.2,1);}
+.card{background:#F7FCF9;border-radius:28px;border:2.5px solid #D8EEE4;padding:24px 22px 20px;position:relative;overflow:hidden;}
+.deco{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;}
+.badge{display:inline-flex;align-items:center;background:#D6F0E4;color:#2A8A5C;font-size:10px;font-weight:800;letter-spacing:.08em;padding:4px 13px;border-radius:20px;margin-bottom:11px;}
+.ttl{font-size:18px;font-weight:900;color:#1E2D27;margin-bottom:2px;}
+.ttl em{color:#3AAF7A;font-style:normal;}
+.sub{font-size:11px;color:#AAC4B8;margin-bottom:10px;}
+.footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px;}
+.tags{font-size:10px;color:#A8C4B4;}
+.nav-dots{display:flex;gap:5px;}
+.ndot{width:7px;height:7px;border-radius:50%;background:#C8DDD5;cursor:pointer;transition:.2s;}
+.ndot.on{background:#3AAF7A;width:20px;border-radius:4px;}
+
+.map-holder{position:relative;height:400px;width:100%;}
+.map-svg{position:absolute;top:0;left:0;width:100%;height:100%;overflow:visible;}
+.c-node{position:absolute;width:94px;height:94px;border-radius:50%;background:#3AAF7A;display:flex;flex-direction:column;align-items:center;justify-content:center;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10;box-shadow:0 4px 18px rgba(58,175,122,.3);}
+.c-ko{font-size:21px;font-weight:900;color:#fff;line-height:1;}
+.c-hint{font-size:9px;color:rgba(255,255,255,.65);margin-top:2px;}
+.leaf{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:20px;padding:8px 12px;z-index:10;width:106px;text-align:center;}
+.lf-char{font-size:14px;font-weight:900;line-height:1.2;}
+.lf-en{font-size:9px;font-style:italic;opacity:.65;margin:2px 0 3px;}
+.lf-ko{font-size:10.5px;font-weight:800;line-height:1.3;}
+.lf-desc{font-size:9px;color:#999;margin-top:2px;line-height:1.45;}
+.la{background:#FFF0F3;border:2px solid #F7C5D0;} .la .lf-char,.la .lf-ko{color:#D95F7A;} .la .lf-en{color:#E893A6;}
+.lb{background:#FFF5E6;border:2px solid #FFD5A0;} .lb .lf-char,.lb .lf-ko{color:#D4841A;} .lb .lf-en{color:#E0A84A;}
+.lc{background:#F3F0FF;border:2px solid #C9C0F5;} .lc .lf-char,.lc .lf-ko{color:#7B6EDB;} .lc .lf-en{color:#9B90E0;}
+.ld{background:#EEF4FF;border:2px solid #B0C9F7;} .ld .lf-char,.ld .lf-ko{color:#3A7BD5;} .ld .lf-en{color:#6BA3E8;}
+.le{background:#F5EDFF;border:2px solid #DDB8F7;} .le .lf-char,.le .lf-ko{color:#9B50D0;} .le .lf-en{color:#BB80E8;}
+
+.tab-bar{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
+.tab{font-size:10.5px;font-weight:700;padding:5px 11px;border-radius:20px;cursor:pointer;border:1.5px solid transparent;transition:.2s;color:#888;background:#F0F0F0;}
+.tab.on{color:#fff;}
+.tab.t0.on{background:#D95F7A;} .tab.t1.on{background:#D4841A;} .tab.t2.on{background:#7B6EDB;} .tab.t3.on{background:#3A7BD5;} .tab.t4.on{background:#9B50D0;}
+
+.ex-panel{display:none;flex-direction:column;gap:9px;margin-bottom:14px;}
+.ex-panel.show{display:flex;}
+.ex-card{border-radius:16px;padding:11px 15px;position:relative;}
+.ex-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:4px 0 0 4px;}
+.pa .ex-card{background:#FFF0F3;} .pa .ex-card::before{background:#D95F7A;}
+.pb .ex-card{background:#FFF5E6;} .pb .ex-card::before{background:#D4841A;}
+.pc .ex-card{background:#F3F0FF;} .pc .ex-card::before{background:#7B6EDB;}
+.pd .ex-card{background:#EEF4FF;} .pd .ex-card::before{background:#3A7BD5;}
+.pe .ex-card{background:#F5EDFF;} .pe .ex-card::before{background:#9B50D0;}
+.ex-word-row{display:flex;align-items:center;gap:7px;margin-bottom:5px;}
+.ex-char{font-size:15px;font-weight:900;}
+.pa .ex-char{color:#D95F7A;} .pb .ex-char{color:#D4841A;} .pc .ex-char{color:#7B6EDB;} .pd .ex-char{color:#3A7BD5;} .pe .ex-char{color:#9B50D0;}
+.ex-tag{font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:10px;}
+.pa .ex-tag{background:#FFD6E0;color:#C04060;} .pb .ex-tag{background:#FFE5B8;color:#A86010;}
+.pc .ex-tag{background:#DDD8F8;color:#5A4DC0;} .pd .ex-tag{background:#CCE0FF;color:#2059B0;} .pe .ex-tag{background:#EDD5FF;color:#7030A8;}
+.ex-zh{font-size:12.5px;font-weight:700;color:#2D2D2D;margin-bottom:3px;line-height:1.55;}
+.ex-ko{font-size:11px;color:#888;line-height:1.5;}
+.ex-ko strong{color:#555;font-weight:700;}
+.back-btn{font-size:11px;color:#2A8A5C;background:#D6F0E4;border:none;border-radius:12px;padding:5px 13px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-weight:700;}
+</style>
+</head>
+<body>
+<div class="outer">
+<div class="pages" id="pages">
+
+<div class="page" id="pg1">
+<div class="card">
+  <svg class="deco" viewBox="0 0 540 520" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="490" cy="55" r="55" fill="#D6F0E4" opacity=".5"/>
+    <circle cx="45" cy="450" r="42" fill="#E8F0FF" opacity=".45"/>
+    <circle cx="505" cy="390" r="32" fill="#FFF0F3" opacity=".45"/>
+    <circle cx="28" cy="85" r="3.5" fill="#A8E6CE" opacity=".6"/>
+    <circle cx="514" cy="160" r="4" fill="#F7C5D0" opacity=".5"/>
+    <circle cx="18" cy="310" r="3" fill="#C9C0F5" opacity=".5"/>
+    <circle cx="522" cy="310" r="3.5" fill="#FFD5A0" opacity=".55"/>
+    <path d="M14 165 Q24 160 19 170 Q29 163 24 173" stroke="#A8E6CE" stroke-width="1.5" fill="none" opacity=".6"/>
+    <path d="M516 105 Q526 100 521 110 Q531 103 526 113" stroke="#F7C5D0" stroke-width="1.5" fill="none" opacity=".55"/>
+  </svg>
+  <div class="badge">중국어 어휘 스터디 · 01</div>
+  <div class="ttl">'<em>고민</em>'을 중국어로?</div>
+  <div class="sub">상황에 따라 완전히 다른 단어를 써요</div>
+  <div class="map-holder" id="mapHolder">
+    <svg class="map-svg" id="mapSvg" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="c-node"><div class="c-ko">고민</div><div class="c-hint">苦悶</div></div>
+    <div class="leaf la" id="lf0"><div class="lf-char">烦恼 / 郁闷</div><div class="lf-en">fánnǎo / yùmèn</div><div class="lf-ko">감정적 괴로움</div><div class="lf-desc">마음이 번거롭고<br>답답하고 울적함</div></div>
+    <div class="leaf lb" id="lf1"><div class="lf-char">担忧 / 发愁</div><div class="lf-en">dānyōu / fāchóu</div><div class="lf-ko">걱정·염려</div><div class="lf-desc">미래나 타인에 대한<br>걱정이 쌓인 상태</div></div>
+    <div class="leaf lc" id="lf2"><div class="lf-char">困惑 / 疑惑</div><div class="lf-en">kùnhuò / yíhuò</div><div class="lf-ko">혼란·헷갈림</div><div class="lf-desc">이해 안 되고<br>갈피를 못 잡음</div></div>
+    <div class="leaf ld" id="lf3"><div class="lf-char">纠结 / 犹豫</div><div class="lf-en">jiūjié / yóuyù</div><div class="lf-ko">결정 못하는 고민</div><div class="lf-desc">이러지도 저러지도<br>실타래처럼 꼬인 상태</div></div>
+    <div class="leaf le" id="lf4"><div class="lf-char">考虑 / 权衡</div><div class="lf-en">kǎolǜ / quánhéng</div><div class="lf-ko">신중한 숙고</div><div class="lf-desc">깊이 따지고<br>저울질하며 생각</div></div>
+  </div>
+  <div class="footer">
+    <div class="tags">#중국어 #고민 #어휘 #감정표현</div>
+    <div class="nav-dots"><div class="ndot on" onclick="goPage(0)"></div><div class="ndot" onclick="goPage(1)"></div></div>
+  </div>
+</div>
+</div>
+
+<div class="page" id="pg2">
+<div class="card">
+  <svg class="deco" viewBox="0 0 540 620" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="490" cy="50" r="50" fill="#D6F0E4" opacity=".45"/>
+    <circle cx="40" cy="580" r="38" fill="#EEE8FC" opacity=".4"/>
+    <circle cx="28" cy="80" r="3.5" fill="#A8E6CE" opacity=".6"/>
+    <circle cx="516" cy="190" r="3.5" fill="#F7C5D0" opacity=".5"/>
+  </svg>
+  <div class="badge">중국어 어휘 스터디 · 02</div>
+  <div class="ttl"><em>예문</em>으로 감 잡기</div>
+  <div class="sub">탭을 눌러 상황별 예문을 확인해요</div>
+  <div class="tab-bar">
+    <div class="tab t0 on" onclick="showTab(0)">😣 감정 괴로움</div>
+    <div class="tab t1" onclick="showTab(1)">😟 걱정·염려</div>
+    <div class="tab t2" onclick="showTab(2)">😵 혼란·헷갈림</div>
+    <div class="tab t3" onclick="showTab(3)">😰 결정 못함</div>
+    <div class="tab t4" onclick="showTab(4)">🤔 신중한 숙고</div>
+  </div>
+  <div class="ex-panel pa show" id="tab0">
+    <div class="ex-card"><div class="ex-word-row"><span class="ex-char">烦恼</span><span class="ex-tag">fánnǎo</span></div><div class="ex-zh">我最近有很多<strong style="color:#D95F7A">烦恼</strong>。</div><div class="ex-ko">나 요즘 <strong>고민</strong>이 너무 많아.</div></div>
+    <div class="ex-card"><div class="ex-word-row"><span class="ex-char">郁闷</span><span class="ex-tag">yùmèn</span></div><div class="ex-zh">这件事让我很<strong style="color:#D95F7A">郁闷</strong>。</div><div class="ex-ko">이 일 때문에 너무 <strong>답답하고 울적해</strong>.</div></div>
+    <div class="ex-card"><div class="ex-word-row"><span class="ex-char">苦恼</span><span class="ex-tag">kǔnǎo</span></div><div class="ex-zh">他内心非常<strong style="color:#D95F7A">苦恼</strong>，却没说出来。</div><div class="ex-ko">그는 속으로 엄청 <strong>괴로워했지만</strong> 말을 못했어.</div></div>
+  </div>
+  <div class="ex-panel pb" id="tab1">
+    <div class="ex-card"><div class="ex-word-row"><span class="ex-char">担忧</span><span class="ex-tag">dānyōu</span></div><div class="ex-zh">我很<strong style="color:#D4841A">担忧</strong>他的健康状况。</div><div class="ex-ko">그의 건강 상태가 너무 <strong>걱정돼</strong>.</div></div>
+    <div class="ex-card"><div class="ex-word-row"><span class="ex-char">发愁</span><span class="ex-tag">fāchóu</span></div><div class="ex-zh">一想到明天的事就<strong style="color:#D4841A">发愁</strong>。</div><div class="ex-ko">내일 일을 생각하면 <strong>속이 타</strong>.</div></div>
+    <div class="ex-card"><div class="ex-word-row"><span class="ex-char">心事重重</span><span class="ex-tag">xīnshì chóngchóng</span></div><div class="ex-zh">她最近看起来<strong style="color:#D4841A">心事重重</strong>。</div><div class="ex-ko">그녀는 요즘 <strong>걱정이 가득해 보여</strong>.</div></div>
+  </div>
+  <div class="ex-panel pc" id="tab2">
+    <div class="ex-card"><div class="ex-word-row"><span class="ex-char">困惑</span><span class="ex-tag">kùnhuò</span></div><div class="ex-zh">他的行为让我感到很<strong style="color:#7B6EDB">困惑</strong>。</div><div class="ex-ko">그 사람 행동이 너무 <strong>이해가 안 가</strong>.</div></div>
+    <div class="ex-card"><div class="ex-word-row"><span class="ex-char">疑惑</span><span class="ex-tag">yíhuò</span></div><div class="ex-zh">我心里有<strong style="color:#7B6EDB">疑惑</strong>，想问你。</div><div class="ex-ko">마음속에 <strong>납득 안 가는 게</strong> 있어서 물어보고 싶어.</div></div>
+    <div class="ex-card"><div class="ex-word-row"><span class="ex-char">迷惑</span><span class="ex-tag">míhuò</span></div><div class="ex-zh">我对自己的未来感到<strong style="color:#7B6EDB">迷惑</strong>。</div><div class="ex-ko">내 미래에 대해 <strong>갈피를 못 잡겠어</strong>.</div></div>
+  </div>
+  <div class="ex-panel pd" id="tab3">
+    <div class="ex-card"><div class="ex-word-row"><span class="ex-char">纠结</span><span class="ex-tag">jiūjié</span></div><div class="ex-zh">我真的很<strong style="color:#3A7BD5">纠结</strong>，不知道该怎么选。</div><div class="ex-ko">진짜 너무 <strong>고민돼</strong>, 어떻게 선택해야 할지 모르겠어.</div></div>
+    <div class="ex-card"><div class="ex-word-row"><span class="ex-char">犹豫</span><span class="ex-tag">yóuyù</span></div><div class="ex-zh">我<strong style="color:#3A7BD5">犹豫</strong>了很久，最终还是放弃了。</div><div class="ex-ko">한참 <strong>망설이다가</strong> 결국 포기했어.</div></div>
+    <div class="ex-card"><div class="ex-word-row"><span class="ex-char">矛盾</span><span class="ex-tag">máodùn</span></div><div class="ex-zh">我内心很<strong style="color:#3A7BD5">矛盾</strong>，两边都舍不得。</div><div class="ex-ko">마음이 너무 <strong>갈려</strong>, 양쪽 다 못 버리겠어.</div></div>
+  </div>
+  <div class="ex-panel pe" id="tab4">
+    <div class="ex-card"><div class="ex-word-row"><span class="ex-char">考虑</span><span class="ex-tag">kǎolǜ</span></div><div class="ex-zh">我<strong style="color:#9B50D0">考虑</strong>了很久才做出这个决定。</div><div class="ex-ko">오래 <strong>고민하고 나서야</strong> 이 결정을 내렸어.</div></div>
+    <div class="ex-card"><div class="ex-word-row"><span class="ex-char">权衡</span><span class="ex-tag">quánhéng</span></div><div class="ex-zh"><strong style="color:#9B50D0">权衡</strong>利弊之后，我决定接受这个提议。</div><div class="ex-ko">장단점을 <strong>저울질한 후</strong> 이 제안을 받아들이기로 했어.</div></div>
+    <div class="ex-card"><div class="ex-word-row"><span class="ex-char">琢磨</span><span class="ex-tag">zuómo</span></div><div class="ex-zh">我一直在<strong style="color:#9B50D0">琢磨</strong>他说的那句话。</div><div class="ex-ko">그가 한 말을 계속 <strong>곱씹고 있었어</strong>.</div></div>
+  </div>
+  <div class="footer">
+    <button class="back-btn" onclick="goPage(0)">← 어휘 보기</button>
+    <div class="nav-dots"><div class="ndot" onclick="goPage(0)"></div><div class="ndot on" onclick="goPage(1)"></div></div>
+  </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<script>
+let cur=0;
+function goPage(n){
+  cur=n;
+  document.querySelectorAll('.page').forEach((p,i)=>p.style.transform=`translateX(${(i-n)*100}%)`);
+  document.querySelectorAll('.ndot').forEach((d,i)=>d.classList.toggle('on',i%2===n));
+  setTimeout(()=>{ document.getElementById('pages').style.height=document.getElementById('pg'+(n+1)).offsetHeight+'px'; },50);
+}
+function showTab(n){
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('on',i===n));
+  document.querySelectorAll('.ex-panel').forEach((p,i)=>p.classList.toggle('show',i===n));
+  setTimeout(()=>{ document.getElementById('pages').style.height=document.getElementById('pg2').offsetHeight+'px'; },30);
+}
+function layoutMap(){
+  const holder=document.getElementById('mapHolder');
+  const svg=document.getElementById('mapSvg');
+  const W=holder.offsetWidth,H=holder.offsetHeight;
+  const cx=W/2,cy=H/2;
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  svg.innerHTML='';
+  const leaves=[0,1,2,3,4].map(i=>document.getElementById('lf'+i));
+  const radius=Math.min(W,H)*0.37;
+  const colors=['#F7C5D0','#FFD5A0','#C9C0F5','#B0C9F7','#DDB8F7'];
+  leaves.forEach((leaf,i)=>{
+    const angle=(-90+i*(360/5))*Math.PI/180;
+    const lw=leaf.offsetWidth,lh=leaf.offsetHeight;
+    const lx=cx+Math.cos(angle)*radius-lw/2;
+    const ly=cy+Math.sin(angle)*radius-lh/2;
+    leaf.style.left=lx+'px'; leaf.style.top=ly+'px';
+    const sx=cx+Math.cos(angle)*49,sy=cy+Math.sin(angle)*49;
+    const ex=lx+lw/2-Math.cos(angle)*13,ey=ly+lh/2-Math.sin(angle)*13;
+    const mx=(sx+ex)/2-Math.sin(angle)*16,my=(sy+ey)/2+Math.cos(angle)*16;
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d',`M${sx},${sy} Q${mx},${my} ${ex},${ey}`);
+    path.setAttribute('stroke',colors[i]); path.setAttribute('stroke-width','2.5');
+    path.setAttribute('fill','none'); path.setAttribute('stroke-dasharray','5 4');
+    path.setAttribute('stroke-linecap','round'); svg.appendChild(path);
+    const dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    dot.setAttribute('cx',ex); dot.setAttribute('cy',ey);
+    dot.setAttribute('r','3.5'); dot.setAttribute('fill',colors[i]); svg.appendChild(dot);
+  });
+}
+window.addEventListener('load',()=>{
+  document.querySelectorAll('.page').forEach((p,i)=>p.style.transform=`translateX(${i*100}%)`);
+  setTimeout(()=>{ layoutMap(); document.getElementById('pages').style.height=document.getElementById('pg1').offsetHeight+'px'; },100);
+});
+window.addEventListener('resize',layoutMap);
+</script>
+</body>
+</html>
