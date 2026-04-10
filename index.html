@@ -3,38 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>언어 학습 허브</title>
+<title>Irenea's Language Study</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:#F0F4F8;font-family:'Noto Sans KR',sans-serif;min-height:100vh;padding:40px 20px 80px;}
 .container{max-width:640px;margin:0 auto;}
 
-/* 헤더 */
 .header{text-align:center;margin-bottom:32px;}
 .header-title{font-size:26px;font-weight:900;color:#1a2332;margin-bottom:6px;}
 .header-sub{font-size:13px;color:#8a9bb0;}
 
-/* 탭 */
 .tabs{display:flex;gap:8px;margin-bottom:24px;background:#fff;border-radius:16px;padding:6px;box-shadow:0 2px 12px rgba(0,0,0,.06);}
 .tab-btn{flex:1;padding:10px;border-radius:12px;border:none;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;font-family:'Noto Sans KR',sans-serif;background:transparent;color:#8a9bb0;}
 .tab-btn.on{color:#fff;}
 .tab-btn.en.on{background:linear-gradient(135deg,#4A90D9,#357ABD);}
 .tab-btn.zh.on{background:linear-gradient(135deg,#3AAF7A,#2A8A5C);}
 
-/* 섹션 */
 .section{display:none;}
 .section.on{display:block;}
 
-/* 섹션 제목 */
 .section-label{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;padding-left:4px;}
 .en-label{color:#4A90D9;}
 .zh-label{color:#3AAF7A;}
 
-/* 단어 그리드 */
 .word-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;}
 
-/* 단어 카드 버튼 */
 .word-card{
   background:#fff;border-radius:14px;padding:16px 14px;
   border:2px solid transparent;cursor:pointer;
@@ -53,93 +47,51 @@ body{background:#F0F4F8;font-family:'Noto Sans KR',sans-serif;min-height:100vh;p
 .zh .wc-word{color:#1E6B4A;}
 .wc-sub{font-size:11px;color:#aab5c0;font-weight:400;}
 
-/* 빈 상태 */
 .empty{text-align:center;padding:40px 20px;color:#aab5c0;font-size:13px;line-height:1.8;}
 .empty-icon{font-size:32px;margin-bottom:8px;}
-
-/* 모달 오버레이 */
-.overlay{
-  display:none;position:fixed;top:0;left:0;width:100%;height:100%;
-  background:rgba(0,0,0,.5);z-index:100;
-  align-items:center;justify-content:center;padding:20px;
-}
-.overlay.on{display:flex;}
-.modal{
-  background:#fff;border-radius:24px;width:100%;max-width:580px;
-  max-height:90vh;overflow-y:auto;position:relative;
-  box-shadow:0 20px 60px rgba(0,0,0,.3);
-}
-.modal-close{
-  position:sticky;top:12px;float:right;margin:12px 12px 0 0;
-  width:32px;height:32px;border-radius:50%;border:none;
-  background:rgba(0,0,0,.08);cursor:pointer;font-size:16px;
-  display:flex;align-items:center;justify-content:center;
-  z-index:10;transition:.2s;
-}
-.modal-close:hover{background:rgba(0,0,0,.15);}
-.modal iframe{
-  width:100%;border:none;border-radius:24px;
-  min-height:500px;display:block;
-}
 </style>
 </head>
 <body>
 <div class="container">
 
   <div class="header">
-    <div class="header-title">언어 학습 허브</div>
-    <div class="header-sub">단어를 클릭하면 학습 카드가 열립니다</div>
+    <div class="header-title">Irenea's Language Study</div>
   </div>
 
   <div class="tabs">
-    <button class="tab-btn en on" onclick="switchTab('en')">🇺🇸 영어</button>
-    <button class="tab-btn zh" onclick="switchTab('zh')">🇨🇳 중국어</button>
+    <button class="tab-btn en on" onclick="switchTab('en')">🇺🇸 English</button>
+    <button class="tab-btn zh" onclick="switchTab('zh')">🇨🇳 中文</button>
   </div>
 
-  <!-- 영어 섹션 -->
   <div class="section en on" id="sec-en">
-    <div class="section-label en-label">English Vocabulary</div>
+    <div class="section-label en-label">English</div>
     <div class="word-grid en" id="grid-en"></div>
   </div>
 
-  <!-- 중국어 섹션 -->
   <div class="section zh" id="sec-zh">
-    <div class="section-label zh-label">中文詞彙</div>
+    <div class="section-label zh-label">中文</div>
     <div class="word-grid zh" id="grid-zh"></div>
   </div>
 
-</div>
-
-<!-- 모달 -->
-<div class="overlay" id="overlay" onclick="closeModal(event)">
-  <div class="modal" id="modal">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    <iframe id="modal-frame" src=""></iframe>
-  </div>
 </div>
 
 <script>
 // ================================================================
 //  ✏️  단어 추가하는 곳 — 여기만 수정하면 됩니다!
 //
-//  형식:
-//  { word: "단어",  sub: "설명 한 줄",  file: "파일명.html" }
-//
+//  형식: { word: "단어",  sub: "설명 한 줄",  file: "파일명.html" }
 //  ★ file은 이 index.html과 같은 폴더에 있는 HTML 파일 이름
 // ================================================================
 
 const ENGLISH = [
-  // 예시 — 새 영어 단어는 아래에 한 줄씩 추가하세요
-  { word: "DSH PAPER_1",     sub: "Ver_Adj.",           file: "DSH_ver_adj.html" },
-  { word: "DSH PAPER_2", sub: "noun",  file: "DSH_noun.html" },
+  { word: "DSH PAPER_1", sub: "Ver_Adj.", file: "DSH_ver_adj.html" },
+  { word: "DSH PAPER_2", sub: "noun",     file: "DSH_noun.html" },
 ];
 
 const CHINESE = [
-  // 예시 — 새 중국어 단어는 아래에 한 줄씩 추가하세요
-  { word: "고민",  sub: "",  file: "gomin_study_card.html" },
-  { word: "기준",  sub: "",  file: "kijun_study_card.html" },
-  { word: "..에도 불구하고",  sub: "",  file: "conjunction_study_card.html" },
-
+  { word: "고민",            sub: "", file: "gomin_study_card.html" },
+  { word: "기준",            sub: "", file: "kijun_study_card.html" },
+  { word: "..에도 불구하고", sub: "", file: "conjunction_study_card.html" },
 ];
 
 // ================================================================
@@ -149,37 +101,15 @@ const CHINESE = [
 function buildGrid(list, gridId) {
   const grid = document.getElementById(gridId);
   if (!list.length) {
-    grid.innerHTML = '<div class="empty"><div class="empty-icon">📭</div>아직 단어가 없어요.<br>파일을 추가하고 목록에 등록해보세요!</div>';
+    grid.innerHTML = '<div class="empty"><div class="empty-icon">📭</div>아직 단어가 없어요.</div>';
     return;
   }
   grid.innerHTML = list.map(item => `
-    <a class="word-card" onclick="openCard('${item.file}'); return false;" href="#">
+    <a class="word-card" href="${item.file}">
       <div class="wc-word">${item.word}</div>
       <div class="wc-sub">${item.sub}</div>
     </a>
   `).join('');
-}
-
-function openCard(file) {
-  const frame = document.getElementById('modal-frame');
-  frame.src = file;
-  document.getElementById('overlay').classList.add('on');
-  document.body.style.overflow = 'hidden';
-  // iframe 높이 자동 조정
-  frame.onload = function() {
-    try {
-      const h = frame.contentDocument.body.scrollHeight;
-      frame.style.minHeight = Math.max(500, h + 40) + 'px';
-    } catch(e) {}
-  };
-}
-
-function closeModal(e) {
-  if (e && e.target !== document.getElementById('overlay') && e.type !== 'click') return;
-  if (e && e.currentTarget === document.getElementById('overlay') && e.target !== e.currentTarget) return;
-  document.getElementById('overlay').classList.remove('on');
-  document.getElementById('modal-frame').src = '';
-  document.body.style.overflow = '';
 }
 
 function switchTab(lang) {
@@ -189,12 +119,8 @@ function switchTab(lang) {
   document.getElementById('sec-' + lang).classList.add('on');
 }
 
-// 초기 렌더
 buildGrid(ENGLISH, 'grid-en');
 buildGrid(CHINESE, 'grid-zh');
-
-// ESC로 모달 닫기
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal({}); });
 </script>
 </body>
 </html>
