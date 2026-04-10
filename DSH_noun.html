@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DSH Paper — Noun</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FAF9F6;--bg2:#F3F1EB;--bg3:#EAE7DF;
+  --line:#DDD9CF;--line2:#C8C3B5;
+  --t1:#2C2A25;--t2:#6B6760;--t3:#9E9A92;
+  --acc:#8B7355;--acc-bg:#F0EAE0;
+  --done:#5C7A5C;--done-bg:#EBF2EB;
+  --tag0-bg:#EDE8FF;--tag0:#5B4E9E;
+  --tag1-bg:#E8F4EE;--tag1:#2E6B4A;
+  --tag2-bg:#FFF0E6;--tag2:#8B4A1E;
+  --tag3-bg:#E8F0FA;--tag3:#2C5282;
+  --tag4-bg:#FDF5E6;--tag4:#7A5C1E;
+  --tag5-bg:#F0EDE8;--tag5:#5C5040;
+  --tag6-bg:#EAF3DE;--tag6:#2E5E1E;
+  --tag7-bg:#FEF3E6;--tag7:#7A4010;
+  --tag8-bg:#FCE8F0;--tag8:#7A1E4A;
+  --tag9-bg:#E8EEF8;--tag9:#1E3A7A;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);font-family:'Noto Sans KR',-apple-system,sans-serif;color:var(--t1);min-height:100vh;}
+.page{max-width:900px;margin:0 auto;padding:2rem 1.5rem 5rem;}
+
+/* 뒤로가기 */
+.back-btn{display:inline-flex;align-items:center;gap:5px;text-decoration:none;font-size:12px;font-weight:700;color:var(--acc);background:var(--acc-bg);padding:6px 14px;border-radius:20px;margin-bottom:1.5rem;border:1px solid var(--line);}
+.back-btn:hover{background:var(--bg3);}
+
+/* 헤더 */
+.header{margin-bottom:1.75rem;padding-bottom:1.25rem;border-bottom:1px solid var(--line);}
+.header-title{font-size:22px;font-weight:900;color:var(--t1);margin-bottom:.3rem;letter-spacing:-.01em;}
+.header-sub{font-size:12px;color:var(--t3);line-height:1.6;}
+
+/* 진행바 */
+.prog-wrap{margin-bottom:1rem;}
+.prog-bar{height:3px;background:var(--line);border-radius:2px;overflow:hidden;}
+.prog-fill{height:100%;background:var(--done);border-radius:2px;transition:width .4s;}
+.prog-label{font-size:11px;color:var(--t3);margin-top:4px;}
+
+/* 통계 */
+.stats{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.1rem;}
+.sp{background:var(--bg2);border:1px solid var(--line);border-radius:20px;padding:3px 11px;font-size:12px;color:var(--t2);}
+.sp b{color:var(--t1);}
+
+/* 툴바 */
+.toolbar{display:flex;gap:8px;margin-bottom:.8rem;}
+.search-wrap{flex:1;position:relative;}
+.search-wrap input{width:100%;padding:8px 12px 8px 32px;border:1px solid var(--line2);border-radius:7px;font-size:13px;background:var(--bg);color:var(--t1);outline:none;font-family:'Noto Sans KR',sans-serif;}
+.search-wrap input:focus{border-color:var(--acc);}
+.search-wrap input::placeholder{color:var(--t3);}
+.si{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:13px;height:13px;color:var(--t3);}
+
+/* 카테고리 탭 */
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--line);}
+.tab{padding:4px 11px;border-radius:5px;font-size:11px;background:transparent;border:1px solid var(--line2);color:var(--t2);cursor:pointer;font-family:'Noto Sans KR',sans-serif;}
+.tab:hover{background:var(--bg2);color:var(--t1);}
+.tab.on{background:var(--t1);color:var(--bg);border-color:var(--t1);}
+
+/* 리스트 */
+.sec{margin-bottom:1.75rem;}
+.sec-label{font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem;padding-left:2px;}
+.list{border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--bg);}
+
+.row{display:grid;grid-template-columns:200px 1fr auto;align-items:center;gap:14px;padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--line);transition:background .12s;}
+.row:last-of-type{border-bottom:none;}
+.row:hover{background:var(--bg2);}
+.row.open{background:var(--acc-bg);}
+.rw{font-size:13px;font-weight:700;color:var(--t1);}
+.rp{font-size:10px;color:var(--t3);margin-top:2px;}
+.rm{font-size:12px;color:var(--t2);line-height:1.5;}
+.rr{display:flex;align-items:center;gap:7px;flex-shrink:0;}
+
+.cbtn{width:21px;height:21px;border-radius:50%;border:1.5px solid var(--line2);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;}
+.cbtn:hover{border-color:var(--done);}
+.cbtn.done{background:var(--done);border-color:var(--done);}
+.ck{width:9px;height:9px;display:none;}
+.cbtn.done .ck{display:block;}
+.ei{width:13px;height:13px;color:var(--t3);transition:transform .2s;flex-shrink:0;}
+.row.open .ei{transform:rotate(180deg);}
+
+.detail{display:none;padding:12px 16px 14px;background:var(--bg2);border-bottom:1px solid var(--line);}
+.row.open+.detail{display:block;}
+.dl{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;}
+.dex{font-size:12px;color:var(--t2);font-style:italic;line-height:1.6;padding-left:10px;border-left:2px solid var(--line2);margin-bottom:10px;}
+.dmo{font-size:12px;color:var(--t2);line-height:1.6;}
+.badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:4px;margin-bottom:8px;font-weight:700;}
+
+.empty{padding:3rem;text-align:center;font-size:13px;color:var(--t3);}
+
+@media(max-width:580px){
+  .row{grid-template-columns:1fr auto;gap:8px;}
+  .rp{display:none;}
+  .header-title{font-size:18px;}
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <a class="back-btn" href="index.html">← 목록으로</a>
+
+  <div class="header">
+    <div class="header-title">DSH Paper — Noun</div>
+    <div class="header-sub">임진왜란 논문에서 추출한 명사 표현 · 행 클릭 시 예문과 메모 확인</div>
+  </div>
+
+  <div class="prog-wrap">
+    <div class="prog-bar"><div class="prog-fill" id="prog"></div></div>
+    <div class="prog-label" id="prog-label"></div>
+  </div>
+  <div class="stats" id="stats"></div>
+
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg class="si" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="5.5" cy="5.5" r="3.5"/><path d="M9 9l2.5 2.5"/></svg>
+      <input id="q" placeholder="단어, 뜻 검색..." oninput="render()">
+    </div>
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+  <div id="content"></div>
+</div>
+
+<script>
+const STORAGE_KEY = 'dsh_noun_known_v1';
+let known = {};
+try { known = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(e) {}
+function saveKnown(){ try { localStorage.setItem(STORAGE_KEY, JSON.stringify(known)); } catch(e) {} }
+
+const CATS = ["NLP·AI 기술","평가·실험","디지털인문학","역사·고전","학술글쓰기","연결·전환","논문구조","데이터·처리","비교·대조","인물·사건"];
+const TC   = ["tag0","tag1","tag2","tag3","tag4","tag5","tag6","tag7","tag8","tag9"];
+
+const V = [
+{w:"pipeline",pos:"n.",cat:0,m:"여러 처리 단계가 연결된 시스템",mo:"multi-stage pipeline — 논문의 핵심 시스템 구조를 설명할 때 필수.",ex:"a multi-stage pipeline combining dense vector retrieval, adaptive temporal filtering"},
+{w:"Graph RAG",pos:"n.",cat:0,m:"지식 그래프를 활용한 검색 증강 생성 기법",mo:"일반 RAG의 한계(long-passage entity relation 포착 불가)를 KG로 보완.",ex:"Graph RAG addresses this by extracting entities and relations into a structured knowledge graph"},
+{w:"RAG (Retrieval-Augmented Generation)",pos:"n.",cat:0,m:"외부 지식을 검색해 LLM에 제공하는 기법",mo:"RAG → 환각 감소. 외부 evidence 기반 추론 유도.",ex:"RAG addresses this issue by supplying the model with actual documents from an external knowledge base"},
+{w:"LLM (Large Language Model)",pos:"n.",cat:0,m:"대규모 언어 모델",mo:"LLMs as candidate providers — 답 생성자가 아닌 후보 제공자로 역할 재정의.",ex:"a human-in-the-loop collaboration model that positions LLMs as candidate providers"},
+{w:"hallucination",pos:"n.",cat:0,m:"LLM이 사실과 다른 내용을 그럴듯하게 생성하는 문제",mo:"task design으로 관리 — 기술적 억제가 아닌 설계 수준의 해결.",ex:"LLM hallucination — a primary concern for humanities researchers"},
+{w:"fine-tuning",pos:"n.",cat:0,m:"사전학습 모델을 특정 태스크에 맞게 추가 훈련",mo:"without task-specific fine-tuning — 이 논문의 주요 강점.",ex:"cross-source alignment is achievable without task-specific fine-tuning"},
+{w:"embedding model",pos:"n.",cat:0,m:"텍스트를 수치 벡터로 변환하는 모델",mo:"BGE-M3 — 1024차원 벡터, 최대 8192 토큰 입력 지원.",ex:"Each text segment is mapped to a 1,024-dimensional dense vector using the BGE-M3 model"},
+{w:"dense vector retrieval",pos:"n.",cat:0,m:"텍스트를 고차원 벡터로 변환해 의미적 유사도로 검색",mo:"dense ↔ sparse. cosine similarity로 유사도 계산.",ex:"dense vector retrieval, adaptive temporal filtering"},
+{w:"sparse lexical features",pos:"n.",cat:0,m:"N-gram 중복률처럼 표면 단어 일치에 기반한 특징",mo:"bigram/trigram — 고유명사·전문용어 정밀 식별에 효과적.",ex:"hybrid scoring that incorporates sparse lexical features"},
+{w:"cosine similarity",pos:"n.",cat:0,m:"두 벡터 간 각도로 유사도를 측정하는 방법",mo:"Score_sem = cos(q,d) = q·d / (|q||d|)",ex:"the dense semantic similarity is calculated via cosine similarity"},
+{w:"named entity recognition (NER)",pos:"n.",cat:0,m:"텍스트에서 인물·장소·기관 등 고유명사를 자동 식별",mo:"NER + name normalization으로 동일 인물의 다양한 표기를 통일.",ex:"core NLP tasks, including date normalization and named entity recognition with name normalization"},
+{w:"coreference resolution",pos:"n.",cat:0,m:"같은 대상을 가리키는 서로 다른 표현들을 연결",mo:"동일 인물을 다른 인물로 오인하는 coreference resolution errors 방지.",ex:"Failure to resolve these variants produces severe coreference resolution errors"},
+{w:"semantic drift",pos:"n.",cat:0,m:"임베딩 모델이 전문 용어를 일반 개념으로 뭉뚱그리는 현상",mo:"'Gijang'을 '전략적 요충지'로 일반화 → 변별력 상실.",ex:"Dense vector models face semantic drift when processing such terms"},
+{w:"knowledge graph (KG)",pos:"n.",cat:0,m:"개체와 관계를 노드·엣지로 표현한 구조화된 지식 표현",mo:"event subgraph = directed graph G=(V,E). 노드: 인물·지명, 엣지: 관계 트리플.",ex:"hybrid scoring that incorporates Knowledge Graph structural similarity"},
+{w:"event subgraph",pos:"n.",cat:0,m:"개별 텍스트 세그먼트에서 추출된 사건 단위의 소규모 그래프",mo:"G=(V,E). 노드=역사 행위자·지명, 엣지=방향성 관계 트리플.",ex:"Each event subgraph is defined as a directed graph G=(V,E)"},
+{w:"Hungarian Algorithm",pos:"n.",cat:0,m:"이분 그래프에서 최적 매칭을 찾는 조합 최적화 알고리즘",mo:"node matching task에 적용. cost matrix → optimal assignment.",ex:"The Hungarian Algorithm is applied to solve this global optimization problem"},
+{w:"node matching",pos:"n.",cat:0,m:"두 그래프의 노드를 최적으로 대응시키는 작업",mo:"S_node = 0.3×Unigram + 0.7×Embedding (검증 세트로 가중치 결정).",ex:"the goal is to find the optimal correspondence that maximizes total similarity"},
+{w:"FAISS",pos:"n.",cat:0,m:"Facebook AI의 근사 최근접 이웃 검색 라이브러리",mo:"7,918개 Joseon Sillok 세그먼트에 대한 효율적 유사도 검색 지원.",ex:"the FAISS library is used to construct an approximate nearest neighbor index"},
+{w:"vector database",pos:"n.",cat:0,m:"임베딩 벡터를 저장하고 유사도 검색을 지원하는 DB",mo:"텍스트 임베딩 저장 → dense retrieval에 활용.",ex:"Text embeddings are generated and stored in a vector database for dense retrieval"},
+{w:"confidence score",pos:"n.",cat:0,m:"모델의 판단 확신도. H(높음)/M(중간)/L(낮음)",mo:"human-in-the-loop 메커니즘 — 연구자가 검토 우선순위를 결정하는 근거.",ex:"a confidence score (H, M, or L) enabling historians to determine their own review priorities"},
+{w:"N-gram (bigram / trigram)",pos:"n.",cat:0,m:"연속된 N개 문자/단어 단위. bigram=2, trigram=3",mo:"고전 중국어에서 2~3자 연속이 고유명사·관직명을 정밀 식별.",ex:"Bigram and trigram string overlap rates are incorporated as sparse lexical features"},
+{w:"BGE-M3",pos:"n.",cat:0,m:"다국어·다기능·다단위 텍스트 임베딩 모델",mo:"고전 중국어 포함 학습, 최대 8192 토큰, 1024차원 벡터 출력.",ex:"Each text segment is mapped to a 1,024-dimensional dense vector using the BGE-M3 model"},
+{w:"prompt design",pos:"n.",cat:0,m:"LLM에 입력하는 지시문의 구성 방식",mo:"role + type definitions + examples + exclusion criteria + output format 5요소.",ex:"The prompt is designed to guide the LLM to reason like a historian"},
+{w:"chunking",pos:"n.",cat:0,m:"긴 텍스트를 일정 단위로 나누는 처리",mo:"character-based(800 tokens) vs event-based — 둘 다 한계 존재.",ex:"Dense + Chunking (800) improves mAP@30 to 0.1741 relative to the dense baseline"},
+{w:"canonical identifier",pos:"n.",cat:0,m:"동일 개체의 모든 표기를 통합하는 고유 식별자",mo:"482명 핵심 인물 DB — 각 인물에 canonical identifier + 모든 이명 부여.",ex:"assigning each figure a unique canonical identifier accompanied by all known name variants"},
+{w:"entity normalization",pos:"n.",cat:0,m:"동일 개체의 다양한 표기를 단일 표준 형태로 통일",mo:"加藤清正 = 淸正 = 主計頭 = 倭將清正 → 하나의 canonical ID.",ex:"A unified person identification database covering 482 core historical figures was constructed"},
+{w:"date normalization",pos:"n.",cat:0,m:"두 사료의 서로 다른 날짜 표기를 통일된 체계로 변환",mo:"명·조선 각각의 연호를 통일 음력으로 변환 → 시간 비교 기반 마련.",ex:"all temporal markers were standardized to a unified lunar calendar"},
+{w:"adaptive time window",pos:"n.",cat:0,m:"검색 범위를 상황에 따라 자동으로 조정하는 시간 필터",mo:"±3개월 → 충분하지 않으면 ±6개월로 자동 확장.",ex:"An adaptive iterative retrieval mechanism is applied: first ±3 months; if insufficient, expands to ±6 months"},
+{w:"relational triple",pos:"n.",cat:0,m:"(주체, 관계, 객체) 형태의 구조화된 지식 표현 단위",mo:"e=(v_i, r, v_j) — KG의 기본 구성 단위.",ex:"the edge set E represents interactions between entities as directed relational triples"},
+{w:"ablation study",pos:"n.",cat:1,m:"각 구성요소를 하나씩 제거해 기여도를 측정하는 실험",mo:"ablation = 제거. 최적 구성 찾기 위한 논문 evaluation 표준.",ex:"we conducted a systematic ablation study on the validation set"},
+{w:"mAP (mean Average Precision)",pos:"n.",cat:1,m:"검색 순위 품질을 평가하는 표준 지표",mo:"mAP@30, @50, @100 — 상위 N개 결과 내 평균 정밀도.",ex:"Results are reported at Top-30, Top-50, and Top-100 cutoffs using mAP and Recall"},
+{w:"recall",pos:"n.",cat:1,m:"재현율. 정답 중 시스템이 찾아낸 비율",mo:"Recall = TP/(TP+FN). Recall@50 = 0.9048 — 최종 성능.",ex:"Recall@50 = 0.9048, confirming the retrieval module's effectiveness"},
+{w:"precision",pos:"n.",cat:1,m:"정밀도. 찾은 것 중 실제 정답 비율",mo:"Precision = TP/(TP+FP). false positive가 많으면 하락.",ex:"Treating unannotated results as false positives would introduce systematic noise"},
+{w:"false positive",pos:"n.",cat:1,m:"틀린 것을 맞다고 잘못 판단한 경우",mo:"FP가 많으면 precision 하락. 검색 noise의 주요 원인.",ex:"Treating such unannotated results as false positives would introduce systematic noise"},
+{w:"baseline",pos:"n.",cat:1,m:"비교 기준이 되는 가장 단순한 방법",mo:"Dense (Baseline) = mAP@30: 0.1154. 모든 실험의 출발점.",ex:"Dense (Baseline) 0.1154 — the starting point for comparison"},
+{w:"validation set",pos:"n.",cat:1,m:"모델 조정 및 검증에 사용하는 데이터 세트",mo:"71쌍(1597년) — 하이퍼파라미터 결정 및 모델 선택에 사용.",ex:"Validation Set (1597): 71 pairs (77%)"},
+{w:"test set",pos:"n.",cat:1,m:"최종 성능 평가에 사용하는 별도 데이터 세트",mo:"21쌍(1592년) — validation과 완전히 분리된 최종 평가용.",ex:"Test Set (1592): 21 pairs (23%)"},
+{w:"hyperparameter search",pos:"n.",cat:1,m:"모델 성능 최적화를 위해 가중치·임계값 등을 조정",mo:"0.3×Unigram + 0.7×Embedding — 검증 세트로 결정된 가중치.",ex:"These weights were determined through a hyperparameter search in the validation set"},
+{w:"retention rate",pos:"n.",cat:1,m:"LLM이 후보 중 실제 관계로 판단해 남긴 비율",mo:"높을수록 recall↑, noise↑. Gemini 3.0이 noise 48% 감소 대비 recall 8.5% 손실.",ex:"higher retention rates are associated with higher recall, but also with larger output volumes"},
+{w:"marginal contribution",pos:"n.",cat:1,m:"각 구성요소가 추가될 때의 개별 성능 향상 기여분",mo:"isolating the marginal contribution of each component — ablation의 목적.",ex:"isolating the marginal contribution of each component"},
+{w:"retrieval noise",pos:"n.",cat:1,m:"검색 결과에 포함된 불필요한 잘못된 후보들",mo:"formulaic phrases → 다른 사건 항목도 높은 어휘 유사도 → noise 유발.",ex:"constituting retrieval noise in this study"},
+{w:"performance profile",pos:"n.",cat:1,m:"모델의 여러 지표를 종합한 특성 분포",mo:"Fig.4: y=recall, x=aligned pairs, bubble size=retention rate로 시각화.",ex:"the performance profile of Gemini 3.0 Pro Preview is particularly noteworthy"},
+{w:"binary judgment",pos:"n.",cat:1,m:"두 가지 중 하나를 선택하는 판단",mo:"병렬독해 관계 여부만 판단 — 유형 분류는 LLM에 위임.",ex:"Annotation was conducted as a binary judgment"},
+{w:"benchmark",pos:"n.",cat:1,m:"성능 비교를 위한 표준 데이터셋 또는 기준",mo:"human-verified benchmark — 전문가 주석으로 신뢰성 확보.",ex:"providing a reliable humanities-based test set for model evaluation"},
+{w:"ground truth",pos:"n.",cat:1,m:"평가의 기준이 되는 정답 레이블",mo:"historian's manual judgment = ground truth. LLM 생성 레이블과 차별화.",ex:"each annotation reflects the careful judgment of a historian with classical text expertise"},
+{w:"parallel reading",pos:"n.",cat:2,m:"이질적 출처에서 같은 사건 기록을 대조하는 방법",mo:"Type 1(텍스트 동일성), Type 2(핵심 키워드 대응), Type 3(인과·시간 추론).",ex:"the automatic alignment of heterogeneous historical sources — 'parallel reading'"},
+{w:"distant reading",pos:"n.",cat:2,m:"대규모 텍스트를 계량적으로 분석하는 방법론",mo:"↔ close reading. 개별 텍스트의 세밀한 의미를 놓치는 한계.",ex:"This approach aims to overcome the limitations of distant reading"},
+{w:"close reading",pos:"n.",cat:2,m:"개별 텍스트를 깊이 있게 분석하는 전통적 방법론",mo:"close reading의 정밀성 + distant reading의 규모를 결합.",ex:"improving the precision of close reading"},
+{w:"corpus",pos:"n.",cat:2,m:"분석 대상 텍스트 데이터의 집합. 복수형 corpora",mo:"7,918 Joseon Sillok segments + 250 Ming Shilu query segments.",ex:"scope reduction was necessary to ensure the efficiency of subsequent semantic analysis"},
+{w:"cross-source alignment",pos:"n.",cat:2,m:"서로 다른 사료에 걸친 동일 사건 자동 대응",mo:"이 논문의 핵심 태스크. fine-tuning 없이 달성.",ex:"cross-source alignment is achievable without task-specific fine-tuning"},
+{w:"semantic gap",pos:"n.",cat:2,m:"어휘적으로 다르지만 의미적으로 연결된 텍스트 간의 격차",mo:"다른 나라에서 같은 사건을 다른 어휘로 기록 → semantic gap 발생.",ex:"Conventional keyword matching techniques cannot effectively bridge this semantic gap"},
+{w:"human-in-the-loop",pos:"n.",cat:2,m:"자동화 파이프라인에서 인간이 최종 판단을 내리는 설계",mo:"LLMs = candidate providers, researchers = final interpreters.",ex:"a human-in-the-loop collaboration model"},
+{w:"database infrastructure",pos:"n.",cat:2,m:"연구 데이터를 체계적으로 저장·검색 가능하게 하는 기반",mo:"RAG를 answer generator가 아닌 database-building infrastructure로 재정의.",ex:"reframes RAG from answer generator to database-building infrastructure"},
+{w:"conceptual precision",pos:"n.",cat:2,m:"개념의 명확한 정의 및 경계 설정",mo:"인문학적 탐구와 전산 방법의 가교 역할 — 쉽게 간과됨.",ex:"Conceptual precision is the critical bridge between humanistic inquiry and computational method"},
+{w:"parallel reading type taxonomy",pos:"n.",cat:2,m:"병렬독해 관계를 유형별로 분류하는 체계",mo:"three-type taxonomy: Type 1/2/3. 유형별 특성이 검색 전략에 영향.",ex:"a three-type parallel reading taxonomy that precisely defines the conceptual boundaries"},
+{w:"source material",pos:"n.",cat:2,m:"연구의 근거가 되는 1차 역사 자료",mo:"Ming Shilu, Joseon Sillok — 이 논문의 primary source materials.",ex:"a design decision that must be made based on the characteristics of the source materials"},
+{w:"Ming Shilu (明實錄)",pos:"n.",cat:3,m:"명나라 황제별 재위 기간 공식 편년체 실록",mo:"매일의 조정 일기·상소·칙서 기반. 외교·군사사의 핵심 사료.",ex:"the Veritable Records of the Ming Dynasty (Ming Shilu)"},
+{w:"Joseon Sillok (朝鮮王朝實錄)",pos:"n.",cat:3,m:"조선 태조~철종 472년간의 공식 편년체 실록",mo:"UNESCO 세계기록유산 등재. XML 형식으로 국사편찬위원회가 공개.",ex:"the Veritable Records of the Joseon Dynasty (Joseon Sillok)"},
+{w:"tributary system",pos:"n.",cat:3,m:"중국 황제를 중심으로 주변국이 조공을 바치는 동아시아 국제 질서",mo:"the East Asian tributary system — 임진왜란으로 불안정화.",ex:"a major event that destabilized the East Asian tributary system"},
+{w:"geopolitical order",pos:"n.",cat:3,m:"국가 간 세력·영토·동맹 관계로 이루어진 국제 구조",mo:"fundamentally reshaped the geopolitical order of East Asia.",ex:"a confrontation that fundamentally reshaped the geopolitical order of East Asia"},
+{w:"editorial stance",pos:"n.",cat:3,m:"기록을 작성한 국가·기관의 정치적·문화적 입장",mo:"국가적 맥락·문화적 시각·편찬 태도의 차이 → 서술 diverge.",ex:"due to differences in national context, cultural perspective, and editorial stance"},
+{w:"investiture",pos:"n.",cat:3,m:"책봉. 황제가 외국 군주에게 지위를 공식 수여하는 의례",mo:"Japan has received the investiture — 임진왜란 강화 협상의 핵심.",ex:"Yang Fangheng, Principal Envoy of the Investiture Mission to Japan"},
+{w:"imperial rescript",pos:"n.",cat:3,m:"칙지. 황제가 상소·청원에 내리는 공식 회답",mo:"edict = 황제의 명령, rescript = 청원에 대한 황제의 답변.",ex:"An imperial rescript was issued: Japan has received the investiture"},
+{w:"reign-year notation",pos:"n.",cat:3,m:"황제·왕의 재위 연호를 사용하는 날짜 표기 체계",mo:"명: 萬曆, 조선: 宣祖 등 각기 다른 연호 → 통일 음력으로 변환 필요.",ex:"Since the Ming Shilu and the Joseon Sillok each employ their own respective reign-year notations"},
+{w:"source reliability",pos:"n.",cat:3,m:"사료 신뢰성. 기록이 실제 사실을 얼마나 정확히 전달하는지",mo:"Ming Shilu의 외교·정치 기록에서 선택적 기록·왜곡 사례 확인.",ex:"These case studies have repeatedly revealed source reliability issues in the Ming Shilu"},
+{w:"macro-level summary",pos:"n.",cat:3,m:"중앙 정부에 보고된 거시적·요약적 기록",mo:"Ming Shilu의 특성 — 전황을 압축해 황제에게 보고.",ex:"The Ming Shilu offers only a brief reference — a macro-level summary"},
+{w:"micro-level field report",pos:"n.",cat:3,m:"현장에서 직접 보고된 세부적·현장감 있는 기록",mo:"Joseon Sillok의 특성 — 현장 관리의 긴급 보고를 직접 인용.",ex:"The Joseon Sillok directly cites the urgent field report"},
+{w:"research question (RQ)",pos:"n.",cat:6,m:"논문이 답하고자 하는 핵심 질문",mo:"RQ1, RQ2. Introduction에서 제시, Discussion에서 답.",ex:"This study addresses the following two research questions"},
+{w:"filtering criterion",pos:"n.",cat:7,m:"데이터 규모를 줄이기 위해 적용하는 선별 기준",mo:"military(군사) + diplomacy(외교) 태그 — 국사편찬위원회 분류 활용.",ex:"The database's existing subject classification tags are applied as a filtering criterion"},
+{w:"scope reduction",pos:"n.",cat:7,m:"분석 효율성을 위해 대상 규모를 줄이는 작업",mo:"수십만 건 → 7,918건(조선실록), 250건(명실록)으로 축소.",ex:"scope reduction was necessary to ensure the efficiency of subsequent semantic analysis"},
+{w:"query source",pos:"n.",cat:7,m:"검색의 출발점이 되는 입력 세그먼트",mo:"250개 Ming Shilu 세그먼트 — query source로 Joseon Sillok 검색.",ex:"These 250 segments serve as the query source in the Imjin War-Align pipeline"},
+{w:"candidate database",pos:"n.",cat:7,m:"검색 대상이 되는 후보 세그먼트 전체 집합",mo:"7,918개 Joseon Sillok 세그먼트 — candidate database.",ex:"constitute the primary candidate database for the parallel reading system"},
+{w:"lexical overlap",pos:"n.",cat:8,m:"두 텍스트 간 공유되는 단어·어구의 비율",mo:"Type 1: 높음, Type 2: 낮음, Type 3: 최소. 유형 구분의 핵심 지표.",ex:"entries describing the same event frequently show minimal lexical overlap"},
+{w:"narrative perspective",pos:"n.",cat:8,m:"사건을 바라보고 서술하는 시각·관점",mo:"같은 사건도 narrative perspective에 따라 다르게 기술됨.",ex:"two passages share the same key entities, but differ in narrative perspective"},
+{w:"asymmetric structure",pos:"n.",cat:8,m:"두 사료 간의 비대칭적 기록 구조",mo:"Ming 1항목 = 평균 10.4개 Joseon 항목. Ming은 압축, Joseon은 개별 대응.",ex:"This asymmetric structure is explained by two interacting factors"},
+{w:"formulaic phrases",pos:"n.",cat:8,m:"정형화된 문구. 관례적으로 반복되는 표현",mo:"군사·외교 기록의 fixed format → formulaic phrases → 검색 noise 유발.",ex:"Military and diplomatic entries tend to follow fixed formats, with certain terms appearing as formulaic phrases"},
+{w:"discrepancy",pos:"n.",cat:8,m:"불일치. 두 기록 간의 사실적·서술적 차이",mo:"gaps and discrepancies across the sources — 사료 비교의 핵심 관심사.",ex:"identifying gaps and discrepancies across the sources"},
+];
+
+let curCat=-1, openId=null;
+
+function getId(w){ return w.replace(/[^a-zA-Z0-9]/g,'_'); }
+function getV(id){ return V.find(v=>getId(v.w)===id); }
+
+function render(){
+  const q=document.getElementById('q').value.toLowerCase();
+  const filtered=V.filter(v=>{
+    const mc=curCat<0||v.cat===curCat;
+    const mq=!q||v.w.toLowerCase().includes(q)||v.m.includes(q)||v.mo.toLowerCase().includes(q);
+    return mc&&mq;
+  });
+  const kn=V.filter(v=>known[v.w]).length;
+  const pct=Math.round(kn/V.length*100);
+  document.getElementById('prog').style.width=pct+'%';
+  document.getElementById('prog-label').textContent=`${kn} / ${V.length} 완료 (${pct}%)`;
+  document.getElementById('stats').innerHTML=`
+    <div class="sp">전체 <b>${V.length}</b></div>
+    <div class="sp">완료 <b>${kn}</b></div>
+    <div class="sp">남은 것 <b>${V.length-kn}</b></div>
+    <div class="sp">표시 중 <b>${filtered.length}</b></div>
+  `;
+  const byCat={};
+  filtered.forEach(v=>{if(!byCat[v.cat])byCat[v.cat]=[];byCat[v.cat].push(v);});
+  const content=document.getElementById('content');
+  if(!filtered.length){content.innerHTML='<div class="empty">검색 결과가 없습니다</div>';return;}
+  content.innerHTML=Object.entries(byCat).map(([ci,items])=>`
+    <div class="sec">
+      <div class="sec-label">${CATS[ci]}</div>
+      <div class="list">
+        ${items.map(v=>{
+          const id=getId(v.w),isO=openId===id,isK=known[v.w],tc=TC[v.cat];
+          return `<div class="row${isO?' open':''}" id="row_${id}" onclick="toggle('${id}')">
+            <div><div class="rw">${v.w}</div><div class="rp">${v.pos}</div></div>
+            <div class="rm">${v.m}</div>
+            <div class="rr">
+              <button class="cbtn${isK?' done':''}" onclick="chk(event,'${id}')">
+                <svg class="ck" viewBox="0 0 9 9" fill="none" stroke="white" stroke-width="1.8"><path d="M1 4.5l2.5 2.5 4.5-4"/></svg>
+              </button>
+              <svg class="ei" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M2.5 4.5l3.5 4 3.5-4"/></svg>
+            </div>
+          </div>
+          <div class="detail">
+            <span class="badge" style="background:var(--${tc}-bg);color:var(--${tc})">${CATS[v.cat]}</span>
+            <div class="dl">예문</div>
+            <div class="dex">${v.ex}</div>
+            <div class="dl">메모</div>
+            <div class="dmo">${v.mo}</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`).join('');
+}
+
+function toggle(id){
+  openId=openId===id?null:id;
+  render();
+  if(openId){const el=document.getElementById('row_'+id);if(el)el.scrollIntoView({behavior:'smooth',block:'nearest'});}
+}
+function chk(e,id){e.stopPropagation();const v=getV(id);if(v){known[v.w]=!known[v.w];saveKnown();}render();}
+
+const tabs=document.getElementById('tabs');
+tabs.innerHTML='<button class="tab on" data-c="-1" onclick="setCat(-1)">전체</button>'+
+  CATS.map((c,i)=>`<button class="tab" data-c="${i}" onclick="setCat(${i})">${c}</button>`).join('');
+function setCat(i){curCat=i;openId=null;document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',+b.dataset.c===i));render();}
+
+render();
+</script>
+</body>
+</html>
