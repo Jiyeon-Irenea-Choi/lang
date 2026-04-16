@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACTA Paper — Vocabulary</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FAF9F6;--bg2:#F3F1EB;--bg3:#EAE7DF;
+  --line:#DDD9CF;--line2:#C8C3B5;
+  --t1:#2C2A25;--t2:#6B6760;--t3:#9E9A92;
+  --acc:#8B7355;--acc-bg:#F0EAE0;
+  --done:#5C7A5C;--done-bg:#EBF2EB;
+  --tag0-bg:#EDE8FF;--tag0:#5B4E9E;
+  --tag1-bg:#E8F4EE;--tag1:#2E6B4A;
+  --tag2-bg:#FFF0E6;--tag2:#8B4A1E;
+  --tag3-bg:#E8F0FA;--tag3:#2C5282;
+  --tag4-bg:#FDF5E6;--tag4:#7A5C1E;
+  --tag5-bg:#F0EDE8;--tag5:#5C5040;
+  --tag6-bg:#EAF3DE;--tag6:#2E5E1E;
+  --tag7-bg:#FCE8F0;--tag7:#7A1E4A;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);font-family:'Noto Sans KR',-apple-system,sans-serif;color:var(--t1);min-height:100vh;}
+.page{max-width:900px;margin:0 auto;padding:2rem 1.5rem 5rem;}
+.back-btn{display:inline-flex;align-items:center;gap:5px;text-decoration:none;font-size:12px;font-weight:700;color:var(--acc);background:var(--acc-bg);padding:6px 14px;border-radius:20px;margin-bottom:1.5rem;border:1px solid var(--line);}
+.back-btn:hover{background:var(--bg3);}
+.header{margin-bottom:1.75rem;padding-bottom:1.25rem;border-bottom:1px solid var(--line);}
+.header-title{font-size:22px;font-weight:900;color:var(--t1);margin-bottom:.3rem;letter-spacing:-.01em;}
+.header-sub{font-size:12px;color:var(--t3);line-height:1.6;}
+.prog-wrap{margin-bottom:1rem;}
+.prog-bar{height:3px;background:var(--line);border-radius:2px;overflow:hidden;}
+.prog-fill{height:100%;background:var(--done);border-radius:2px;transition:width .4s;}
+.prog-label{font-size:11px;color:var(--t3);margin-top:4px;}
+.stats{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.1rem;}
+.sp{background:var(--bg2);border:1px solid var(--line);border-radius:20px;padding:3px 11px;font-size:12px;color:var(--t2);}
+.sp b{color:var(--t1);}
+.toolbar{display:flex;gap:8px;margin-bottom:.8rem;}
+.search-wrap{flex:1;position:relative;}
+.search-wrap input{width:100%;padding:8px 12px 8px 32px;border:1px solid var(--line2);border-radius:7px;font-size:13px;background:var(--bg);color:var(--t1);outline:none;font-family:'Noto Sans KR',sans-serif;}
+.search-wrap input:focus{border-color:var(--acc);}
+.search-wrap input::placeholder{color:var(--t3);}
+.si{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:13px;height:13px;color:var(--t3);}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--line);}
+.tab{padding:4px 11px;border-radius:5px;font-size:11px;background:transparent;border:1px solid var(--line2);color:var(--t2);cursor:pointer;font-family:'Noto Sans KR',sans-serif;}
+.tab:hover{background:var(--bg2);color:var(--t1);}
+.tab.on{background:var(--t1);color:var(--bg);border-color:var(--t1);}
+.sec{margin-bottom:1.75rem;}
+.sec-label{font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem;padding-left:2px;}
+.list{border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--bg);}
+.row{display:grid;grid-template-columns:200px 1fr auto;align-items:center;gap:14px;padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--line);transition:background .12s;}
+.row:last-of-type{border-bottom:none;}
+.row:hover{background:var(--bg2);}
+.row.open{background:var(--acc-bg);}
+.rw{font-size:13px;font-weight:700;color:var(--t1);}
+.rp{font-size:10px;color:var(--t3);margin-top:2px;}
+.rm{font-size:12px;color:var(--t2);line-height:1.5;}
+.rr{display:flex;align-items:center;gap:7px;flex-shrink:0;}
+.cbtn{width:21px;height:21px;border-radius:50%;border:1.5px solid var(--line2);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;}
+.cbtn:hover{border-color:var(--done);}
+.cbtn.done{background:var(--done);border-color:var(--done);}
+.ck{width:9px;height:9px;display:none;}
+.cbtn.done .ck{display:block;}
+.ei{width:13px;height:13px;color:var(--t3);transition:transform .2s;flex-shrink:0;}
+.row.open .ei{transform:rotate(180deg);}
+.detail{display:none;padding:12px 16px 14px;background:var(--bg2);border-bottom:1px solid var(--line);}
+.row.open+.detail{display:block;}
+.dl{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;}
+.dex{font-size:12px;color:var(--t2);font-style:italic;line-height:1.6;padding-left:10px;border-left:2px solid var(--line2);margin-bottom:10px;}
+.dmo{font-size:12px;color:var(--t2);line-height:1.6;}
+.badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:4px;margin-bottom:8px;font-weight:700;}
+.empty{padding:3rem;text-align:center;font-size:13px;color:var(--t3);}
+@media(max-width:580px){
+  .row{grid-template-columns:1fr auto;gap:8px;}
+  .rp{display:none;}
+  .header-title{font-size:18px;}
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <a class="back-btn" href="index.html">← 목록으로</a>
+  <div class="header">
+    <div class="header-title">ACTA Paper — Sinograph & Writing Systems</div>
+    <div class="header-sub">한자 자형 변화 논문에서 추출한 핵심 어휘 · 행 클릭 시 예문과 메모 확인</div>
+  </div>
+  <div class="prog-wrap">
+    <div class="prog-bar"><div class="prog-fill" id="prog"></div></div>
+    <div class="prog-label" id="prog-label"></div>
+  </div>
+  <div class="stats" id="stats"></div>
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg class="si" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="5.5" cy="5.5" r="3.5"/><path d="M9 9l2.5 2.5"/></svg>
+      <input id="q" placeholder="단어, 뜻 검색..." oninput="render()">
+    </div>
+  </div>
+  <div class="tabs" id="tabs"></div>
+  <div id="content"></div>
+</div>
+<script>
+const STORAGE_KEY='acta_known_v1';
+let known={};
+try{known=JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');}catch(e){}
+function saveKnown(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(known));}catch(e){}}
+
+const CATS=["문자·문자체계","역사·제도","논문 방법론","학술 글쓰기","동사·분석","형용사·정도","연결·전환","비교·대조"];
+const TC=["tag0","tag1","tag2","tag3","tag4","tag5","tag6","tag7"];
+
+const V=[
+// ── 0 문자·문자체계 ──
+{w:"sinograph",pos:"n.",cat:0,m:"한자. 중국 기원의 표의문자 체계에 속하는 개별 문자",mo:"중립적·학술적 용어. Chinese character보다 더 정확한 표현으로 영어 문자학에서 사용.",ex:"sinographic forms used in Korea constitute a historically distinct tradition"},
+{w:"sinographic form",pos:"n.",cat:0,m:"한자의 자형(字形). 문자의 시각적·구조적 형태",mo:"graphic form과 같은 의미. 이 논문의 핵심 분석 대상.",ex:"sinographic forms classified under the same category exhibit uniform forms across different East Asian countries"},
+{w:"Hancha (漢字)",pos:"n.",cat:0,m:"한국에서 사용하는 한자의 한국식 명칭",mo:"Hancha ≠ Chinese characters. 한국 고유의 자형 특성을 가진 별개의 전통.",ex:"Korean Hancha as a historically distinct sinographic practice"},
+{w:"Sinographic sphere",pos:"n.",cat:0,m:"한자 문화권. 한자를 공통 문자 매체로 사용하는 동아시아 문화권",mo:"Sinosphere보다 더 문자(writing) 중심적인 개념. Denecke(2017)의 용어.",ex:"the Sinographic sphere — a shared writing-based cultural sphere grounded in the use of sinographs"},
+{w:"graphic variant / variant form",pos:"n.",cat:0,m:"이체자(異體字). 같은 글자의 다른 자형",mo:"variant ↔ original form(본자). 동일 문자의 다양한 시각적 표현.",ex:"graphic variants frequently coexisted and usage patterns shifted according to historical period"},
+{w:"original form / ponja (本字)",pos:"n.",cat:0,m:"본자(本字). 문자의 정형·기준이 되는 원래 형태",mo:"설문해자·강희자전 기준. variant form(속자)의 반대 개념.",ex:"the distinction between primary and variant forms is established with reference to the Shuowen jiezi"},
+{w:"stroke configuration",pos:"n.",cat:0,m:"획의 구성·배열 방식. 획의 모양, 방향, 결합 구조",mo:"stroke count(획수), stroke order(획순), stroke direction(획방향)과 함께 자형 비교의 기준.",ex:"characters exhibit distinct stroke configurations across Japan, China, Taiwan, Hong Kong, and Korea"},
+{w:"stroke count",pos:"n.",cat:0,m:"획수(劃數). 한자를 구성하는 획의 총 개수",mo:"자형 동일성 판단의 기준 중 하나. 획수가 다르면 다른 자형으로 분류.",ex:"Jang (2013) applying stricter criteria including stroke count, stroke order, and radical composition"},
+{w:"radical composition",pos:"n.",cat:0,m:"부수 구성. 한자를 이루는 부수(部首)의 조합",mo:"radical = 부수. 字形 비교 시 부수 변화 여부가 핵심 기준.",ex:"Jang (2013) treating differences in stroke count, stroke order, and radical composition as sufficient grounds for distinguishing forms"},
+{w:"morphosyllabic writing system",pos:"n.",cat:0,m:"형태·음절 문자 체계. 각 글자가 형태소와 음절을 동시에 표현하는 문자 체계",mo:"한자의 특성 설명. alphabetic system과 달리 획의 미묘한 차이가 의미·발음에 영향.",ex:"sinographs are sensitive to differences in stroke count, angle, and length in ways that can affect both meaning and pronunciation"},
+{w:"Unicode code point",pos:"n.",cat:0,m:"유니코드 코드 포인트. 각 문자에 부여된 고유 숫자 식별자",mo:"같은 의미의 한자도 자형이 다르면 별도 코드 포인트 부여 → 국제 인코딩 기준에서 자형 차이 공식 인정.",ex:"sinographs sharing the same meaning and pronunciation are assigned distinct code points when their forms differ across regions"},
+{w:"orthographic identity",pos:"n.",cat:0,m:"정서법적 정체성. 문자가 독립된 표기 단위로 구별되는 성질",mo:"Unicode 코드 포인트 구분 = orthographic identities로 인정됨.",ex:"graphic distinctions constitute discrete orthographic identities"},
+{w:"phonographic adaptation",pos:"n.",cat:0,m:"음표 적용. 한자를 음성 표기 목적으로 변용하는 방식",mo:"Hyangch'al·Idu·Kugyŏl의 공통 특징. 기존 연구가 집중한 분야.",ex:"research has concentrated primarily on the phonographic adaptation of sinographs in Korea"},
+{w:"graphic variation",pos:"n.",cat:0,m:"자형 변이. 동일 문자의 시각적 형태가 달라지는 현상",mo:"이 논문의 핵심 연구 대상. 지역·시대·매체에 따라 다르게 나타남.",ex:"graphic variants frequently coexisted and usage patterns shifted"},
+{w:"sinographic variation",pos:"n.",cat:0,m:"한자 변이. 한자 자형의 지역적·역사적 다양성",mo:"phonological/semantic variation과 구별되는 graphic 수준의 변이.",ex:"sinographic variation is better understood as the product of multiple interacting forces"},
+{w:"script policy",pos:"n.",cat:0,m:"문자 정책. 국가가 특정 문자의 사용을 규정·표준화하는 정책",mo:"일본 当用漢字(1946), 중국 簡化字方案(1956) 등 20세기 중반 개혁.",ex:"the binary reflects above all the outcomes of mid-twentieth-century script policy decisions"},
+{w:"script simplification",pos:"n.",cat:0,m:"한자 간화(簡化). 획수를 줄여 문자를 단순화하는 정책",mo:"China·Japan만 시행. Korea·Taiwan·Hong Kong은 시행 안 함.",ex:"China pursued a more extensive programme of structural simplification"},
+{w:"Shinjitai (新字体)",pos:"n.",cat:0,m:"신자체. 일본의 문자 개혁으로 만들어진 단순화된 한자 형태",mo:"1946년 当用漢字 목록 도입. traditional form의 구조적 단순화.",ex:"Japan initiated formal character reform in 1946 with the Tōyō Kanji list, which introduced structurally simplified forms known as Shinjitai"},
+{w:"traditional-form sinograph",pos:"n.",cat:0,m:"번체자(繁體字). 간화 개혁 이전의 전통적 한자 형태",mo:"'traditional'이라는 단일 범주 안에도 내부 다양성 존재 — 이 논문의 핵심 주장.",ex:"sinographic forms classified as traditional-form sinographs in both Korea and Taiwan but assigned different Unicode code points"},
+{w:"simplified-traditional binary",pos:"n.",cat:0,m:"간체-번체 이분법. 한자를 '간체'와 '번체'로만 나누는 분류 체계",mo:"이 논문이 비판하는 핵심 분류 틀. 실제 다양성을 충분히 반영하지 못함.",ex:"the traditional–simplified binary is insufficient to account for the full range of graphic variation across East Asia"},
+{w:"classificatory framework",pos:"n.",cat:0,m:"분류 틀. 현상을 범주화하는 개념적 체계",mo:"논문이 기존 binary framework를 비판하고 더 nuanced한 틀을 제안.",ex:"points toward the need for a more nuanced classificatory framework"},
+{w:"internal uniformity",pos:"n.",cat:0,m:"내부 균일성. 같은 범주 안에 있는 항목들이 동일하다는 가정",mo:"이 논문이 비판하는 가정. '전통' 범주 안에도 30%의 자형 차이 존재.",ex:"it implicitly assumes a degree of internal uniformity that does not reflect the historical record"},
+{w:"regional divergence",pos:"n.",cat:0,m:"지역적 분기. 같은 문자가 지역에 따라 다른 형태로 발전하는 현상",mo:"synchronic analysis의 핵심 발견. Korea vs Taiwan: 30.2% 자형 차이.",ex:"revealing significant internal diversity even within the category of traditional-form sinographs"},
+{w:"Guózì (國字)",pos:"n.",cat:0,m:"국자(國字). 대만의 표준 한자 형태",mo:"台灣 교육부 제정 常用國字標準字體表(1982). 4,808자 수록.",ex:"a comparative analysis of Korean Hancha and the standard forms of Taiwanese Guózì"},
+{w:"Jōyō Kanji (常用漢字)",pos:"n.",cat:0,m:"상용한자. 일본의 일상에서 사용되는 표준 한자 목록",mo:"1981년 제정, 2010년 개정. 2,136자 수록. 당용한자를 대체.",ex:"only 360 of the 2,136 characters on the Jōyō Kanji list, approximately 17%, represent simplified forms"},
+{w:"hanmun (漢文)",pos:"n.",cat:0,m:"한문(漢文). 한국·동아시아에서 사용된 문어체 한문",mo:"Literary Sinitic. 조선시대 공문서·역사 기록의 주요 매체.",ex:"the study of hanmun likewise remains a component of Korean literature departments"},
+{w:"Hyangch'al (鄕札)",pos:"n.",cat:0,m:"향찰. 고대 한국어를 표기하기 위해 한자를 음성·의미적으로 변용한 표기 체계",mo:"향가(鄕歌) 표기에 사용. 한자의 음과 훈을 함께 활용.",ex:"phonographic adaptation of sinographs in Korea — particularly through systems such as Hyangch'al"},
+{w:"Idu (吏讀)",pos:"n.",cat:0,m:"이두. 한자를 한국어 문법 구조에 맞게 변용한 행정 문서 표기 체계",mo:"관청 문서에 주로 사용. 음독과 훈독 병용.",ex:"an administrative writing system that adapted sinographs to Korean syntax"},
+{w:"Kugyŏl (口訣)",pos:"n.",cat:0,m:"구결. 한문 텍스트에 한국어 독법을 표시하는 주석 체계",mo:"한문 텍스트의 어순·조사·활용어미를 표시. 한자 약체 사용.",ex:"Kugyŏl is an annotation system that adds interlinear marks to hanmun texts to guide Korean reading"},
+{w:"Sino-Korean vocabulary",pos:"n.",cat:0,m:"한자어. 한자에서 유래한 한국어 어휘",mo:"헌법 전문 명사의 83.6%, 한강 노벨 강연 명사의 53.7%가 한자어.",ex:"a substantial proportion of Korean vocabulary consists of Sino-Korean words"},
+{w:"metal movable-type edition",pos:"n.",cat:0,m:"금속활자본. 금속활자로 인쇄된 서적",mo:"조선시대 국가 주도로 제작. 자형 선택이 신중하게 이루어짐 → 공식 자형 기준.",ex:"Produced at considerable expense, the casting of metal type required deliberate decisions about sinographic form"},
+// ── 1 역사·제도 ──
+{w:"diachronic analysis",pos:"n.",cat:1,m:"통시적 분석. 시간의 흐름에 따른 변화를 추적하는 분석",mo:"↔ synchronic analysis. 14~20세기 한국 자형 변화 추적.",ex:"The diachronic analysis focuses on seven characters classified as traditional-form sinographs"},
+{w:"synchronic analysis",pos:"n.",cat:1,m:"공시적 분석. 특정 시점에서의 상태를 비교하는 분석",mo:"↔ diachronic analysis. 한국·중국·대만 현대 자형 비교.",ex:"The synchronic analysis compares contemporary sinographic forms across Korea, China, and Taiwan"},
+{w:"scribal norm",pos:"n.",cat:1,m:"필사 규범. 문서 작성 시 따르는 자형·표기 관행",mo:"official scribal norm = 국가 공인 자형 관행. medium-specific.",ex:"making these editions a valuable source for observing the graphic sensibilities and preferences of court officials"},
+{w:"scribal practice",pos:"n.",cat:1,m:"필사 관행. 실제 문서 작성 과정에서 나타나는 자형 사용 방식",mo:"규범(norm)과 실제 관행(practice)이 다를 수 있음. 인쇄 vs 필사 차이.",ex:"the form 教 had become thoroughly habituated in the actual writing practice of court officials"},
+{w:"Veritable Records (實錄)",pos:"n.",cat:1,m:"실록(實錄). 왕의 재위 기간을 편년체로 기록한 공식 역사서",mo:"조선왕조실록 = 1392~1864 기록. 자형 변화 추적의 핵심 자료.",ex:"the Sillok — a chronological history recording the dynasty from 1392 to 1864"},
+{w:"Ilsŏngnok (日省錄)",pos:"n.",cat:1,m:"일성록(日省錄). 국왕의 일상 업무를 기록한 행정 일기(1760~1910)",mo:"필사 자료 → 실제 궁정 관리의 자형 사용 관행 직접 확인 가능.",ex:"the Ilsŏngnok — its proximity to the moment of transcription makes it particularly valuable"},
+{w:"Kabo Reform (甲午改革)",pos:"n.",cat:1,m:"갑오개혁(1894). 한글을 공식 문자로 지정한 근대적 문자 정책 개혁",mo:"고종 31년. 공문서에 한글 우선 사용, 한문 번역 병기 또는 국한문 혼용 허용.",ex:"the Kabo Reform of 1894, when King Kojong proclaimed Hangŭl as the basis of the national script"},
+{w:"typographic reform",pos:"n.",cat:1,m:"활자 개혁. 인쇄에 사용하는 활자의 자형을 표준화·변경하는 작업",mo:"정조의 整理字(1796) — 강희자전 자형 채택. revivalist tendency 반영.",ex:"Chŏngjo's typographic reforms — when King Chŏngjo commissioned the new metal type known as Chŏngni-ja in 1796"},
+{w:"Kangxi zidian (康熙字典)",pos:"n.",cat:1,m:"강희자전(1716). 청나라 강희제 칙명으로 편찬된 대규모 한자 자전",mo:"한국 조선 후기 자형 표준의 참조 자료. 본자를 우선시하는 문화 표준화.",ex:"the sinographic forms were modelled on those of the Kangxi zidian, which had privileged original over variant forms"},
+{w:"Shuowen jiezi (說文解字)",pos:"n.",cat:1,m:"설문해자. 후한 허신이 편찬한 최초의 한자 자전(100 CE)",mo:"본자와 속자의 구분 기준. 한자 원형 판별의 권위 있는 문헌.",ex:"The distinction between primary and variant forms is established with reference to the Shuowen jiezi"},
+{w:"civil service examination (科擧)",pos:"n.",cat:1,m:"과거(科擧). 조선시대 관리 선발을 위한 국가 시험 제도",mo:"칙서 자형이 과거 평가 기준 → 자형 규범이 문화 권위 구조와 연결.",ex:"calligraphic proficiency constituted an evaluative criterion in the state civil service examination system"},
+{w:"revivalist tendency",pos:"n.",cat:1,m:"복고주의 경향. 원형·고전적 형태를 부활시키려는 문화적 흐름",mo:"조선 후기 특히 정조 재위기에 강조. 본자 우선 자형 정책의 배경.",ex:"This pattern aligns with the revivalist cultural tendencies of the period"},
+{w:"political upheaval",pos:"n.",cat:1,m:"정치적 격변. 사회·정치 질서가 크게 흔들리는 시기",mo:"임진왜란·연산군-중종 교체기 → 자형 통제 붕괴 → 이체자 증가.",ex:"During times of political upheaval the consistent regulation of sinographic forms became difficult to maintain"},
+{w:"cultural flourishing",pos:"n.",cat:1,m:"문화적 융성. 문화·예술·인쇄 기술이 발달하는 번영 시기",mo:"세종 재위기. 자형 다양성 증가 = 문화적 풍요의 반영.",ex:"the proliferation of forms was a manifestation of cultural prosperity — the long duration of Sejong's reign coupled with his promotion of cultural enterprises"},
+{w:"printing technology",pos:"n.",cat:1,m:"인쇄 기술. 활자·목판 등 문자 복제 기술",mo:"필서체 → 인쇄체 전환. 획의 경제성·효율성 강조 → 자형 수렴.",ex:"the transition from brush-written styles to printing styles and the emphasis on economy and efficiency afforded by new printing technologies"},
+{w:"longitudinal change",pos:"n.",cat:1,m:"통시적 변화. 장기간에 걸쳐 일어나는 점진적 변화",mo:"Sillok = 472년 기록 → 자형 종단 변화 추적에 이상적인 자료.",ex:"its near-complete coverage of successive reigns makes it the most extensive source for tracing longitudinal changes"},
+{w:"sociocultural context",pos:"n.",cat:1,m:"사회문화적 맥락. 자형 선택에 영향을 미치는 사회·문화적 조건",mo:"자형 변화는 기술적 사건이 아니라 역사적 조건의 산물.",ex:"usage patterns shifted according to historical period and sociocultural context"},
+{w:"script transition",pos:"n.",cat:1,m:"문자 전환. 사회에서 주로 사용하는 문자가 교체되는 과정",mo:"19세기 말~20세기 초 조선의 漢字→한글 전환 과정.",ex:"Korean official writing was in transition toward Hangŭl"},
+{w:"Hangŭl-exclusive policy",pos:"n.",cat:1,m:"한글 전용 정책. 공문서에 한글만 사용하도록 규정한 언어 정책",mo:"1948년 한글전용법 제정. 이후 단계적 확대.",ex:"the Act on the Exclusive Use of Hangŭl designated Hangŭl as the script for public documents"},
+// ── 2 논문 방법론 ──
+{w:"diachronic perspective",pos:"n.",cat:2,m:"통시적 관점. 시간 변화를 고려한 역사적 분석 시각",mo:"↔ synchronic perspective. 이 논문은 두 관점을 모두 채택.",ex:"Diachronic and Synchronic Perspectives on Korean Hancha"},
+{w:"empirical evidence",pos:"n.",cat:2,m:"경험적 증거. 실제 데이터·관찰에 기반한 근거",mo:"이론적 주장이 아닌 실증 데이터로 논증. image-based character data 사용.",ex:"the study shows that graphic variants frequently coexisted — empirical evidence"},
+{w:"corpus",pos:"n.",cat:2,m:"말뭉치. 분석 대상 텍스트·자료의 집합",mo:"금속활자본 13종 + 실록 27권 + 일성록 6권.",ex:"tracing their use through metal-type editions, the Sillok, and the Ilsŏngnok"},
+{w:"primary source",pos:"n.",cat:2,m:"1차 자료. 연구 대상 시기에 직접 생산된 원본 자료",mo:"금속활자본·실록·일성록 모두 국가 권위 하에 제작·보존된 공식 기록.",ex:"three types of primary sources, all official records produced and preserved under state authority"},
+{w:"sample / sampling",pos:"n.",cat:2,m:"표본. 전체를 대표하기 위해 선택된 일부 항목",mo:"7개 문자 선정 기준: Unicode 차이 + 고빈도 + 접근 가능성.",ex:"the seven characters examined constitute a sample rather than a comprehensive survey"},
+{w:"selection criteria",pos:"n.",cat:2,m:"선정 기준. 분석 대상을 결정하는 원칙",mo:"3가지 기준: (1) Unicode 차이, (2) 고빈도, (3) 자료 접근성.",ex:"Seven characters were selected on the basis of three criteria"},
+{w:"image-based character data",pos:"n.",cat:2,m:"이미지 기반 자형 데이터. 문자를 이미지로 스캔·분류한 데이터",mo:"한국역대한자자형자전 DB — AI 기반 OCR, 자형 이미지 약 3억 건.",ex:"analysing sinographic forms as they actually appeared in historical documents rather than inferring from secondary accounts"},
+{w:"attested form",pos:"n.",cat:2,m:"출현 확인 형태. 실제 문헌에서 확인된 자형",mo:"두 가지 이상 자형이 동일 시기·지역에서 공존 확인됨.",ex:"graphic variants frequently coexisted — two or more coexisting forms within the same period and locality"},
+{w:"multi-layered reconstruction",pos:"n.",cat:2,m:"다층적 재구성. 여러 자료를 결합하여 역사적 실상을 복원하는 방법",mo:"금속활자본 + 실록 + 일성록의 3종 자료 결합.",ex:"enable a multi-layered reconstruction of scribal norms across different institutional contexts"},
+{w:"quantitative comparison",pos:"n.",cat:2,m:"정량적 비교. 수치로 차이를 측정하는 비교 방법",mo:"한국-대만 자형 차이 30.2%, 한국-중국 23~63.5% 등.",ex:"Quantitative comparisons corroborate this observation"},
+{w:"methodological inconsistency",pos:"n.",cat:2,m:"방법론적 비일관성. 연구자마다 다른 기준을 적용하는 문제",mo:"자형 차이 수치의 넓은 범위(23~63.5%)가 기준 불일치에서 비롯됨.",ex:"The wide range of figures is not simply a product of methodological inconsistency"},
+{w:"institutional context",pos:"n.",cat:2,m:"제도적 맥락. 자형 사용에 영향을 주는 국가·기관의 제도적 환경",mo:"실록 편찬 = 국가 통제 공정 → 자형 변이도 공식 관행 반영.",ex:"a multi-layered reconstruction of scribal norms across different institutional contexts and historical periods"},
+// ── 3 학술 글쓰기 ──
+{w:"critically reexamine",pos:"v. phrase",cat:3,m:"비판적으로 재검토하다. 기존 주장의 타당성을 의문시하며 재분석",mo:"This study critically reexamines — 기존 이분법 비판의 출발점.",ex:"This study critically reexamines the dominant binary classification of sinographs"},
+{w:"the present study",pos:"phrase",cat:3,m:"본 연구. 현재 논문을 가리키는 격식체 표현",mo:"'this study'보다 더 격식적. 논문 전반에 걸쳐 사용.",ex:"the present study shifts the analytical focus from phonographic adaptation to graphic variation"},
+{w:"point toward the need for",pos:"phrase",cat:3,m:"~의 필요성을 시사하다. 향후 연구 방향이나 개선 필요성을 제안",mo:"Conclusion에서 자주 사용. warrants + 구체적 필요성 제시.",ex:"points toward the need for a more nuanced classificatory framework"},
+{w:"is insufficient to account for",pos:"phrase",cat:3,m:"~을 설명하기에 불충분하다. 기존 틀의 한계를 지적",mo:"binary가 실제 다양성을 설명하지 못한다는 핵심 주장.",ex:"the traditional–simplified dichotomy is insufficient to account for the full range of graphic variation"},
+{w:"does not hold up to empirical scrutiny",pos:"phrase",cat:3,m:"경험적 검토를 통과하지 못하다. 실증 데이터로 반박됨",mo:"이론적 가정이 데이터로 검증되지 않을 때 사용하는 표현.",ex:"the assumption that countries grouped under 'traditional' share a uniform set of forms does not hold up to empirical scrutiny"},
+{w:"corroborate",pos:"v.",cat:3,m:"(증거가) 뒷받침하다, 확증하다",mo:"confirm보다 더 강한 증거 지지. 정량적 비교가 관찰을 뒷받침.",ex:"Quantitative comparisons corroborate this observation"},
+{w:"attest to",pos:"v. phrase",cat:3,m:"~을 입증하다, 증언하다. 증거로서 사실을 뒷받침",mo:"데이터·사례가 어떤 사실의 존재를 보여줄 때.",ex:"these figures nonetheless attest to the substantial presence of Sino-Korean vocabulary in Korean discourse"},
+{w:"be read as",pos:"phrase",cat:3,m:"~로 해석될 수 있다. 데이터·현상의 의미를 해석적으로 제시",mo:"신중한 해석 제안. 단정이 아닌 가능성으로 제시.",ex:"an increase in the number of forms may be read as a marker of social instability"},
+{w:"tell a different story",pos:"phrase",cat:3,m:"다른 이야기를 전한다. 예상과 다른 결과를 극적으로 제시",mo:"The data, however, tell a different story — 기대 vs 실제 결과 대비.",ex:"The data, however, tell a different story: an average of 9.5 forms per reign"},
+{w:"lend themselves to",pos:"phrase",cat:3,m:"~에 적합하다, ~에 활용되다",mo:"These patterns do not lend themselves to simple causal explanation — 단순 인과 설명 부적합.",ex:"the patterns documented in this study do not lend themselves to simple causal explanation"},
+{w:"leave no trace in",pos:"phrase",cat:3,m:"~에 흔적을 남기지 않다. 자료에서 확인되지 않음",mo:"자형이 완전히 사라져 사료에서 찾을 수 없는 경우.",ex:"the original form left no trace in the sources examined"},
+{w:"cannot be adequately captured by",pos:"phrase",cat:3,m:"~으로 충분히 포착되지 않는다. 기존 틀의 한계 지적",mo:"binary framework의 한계를 논문 전체에 걸쳐 반복 강조.",ex:"Korean Hancha cannot be adequately captured by existing classificatory frameworks"},
+{w:"merits / warrants attention",pos:"phrase",cat:3,m:"주목할 가치가 있다. 특정 현상이 학문적 관심을 받아야 함을 주장",mo:"warrants further attention / merits investigation — Conclusion의 미래 연구 제언.",ex:"variation as a historically meaningful phenomenon in its own right"},
+{w:"in its own right",pos:"phrase",cat:3,m:"그 자체로. 다른 것에 종속되지 않고 독자적인 가치·의미가 있음",mo:"Korean Hancha를 중국 한자의 부산물이 아닌 독립 연구 대상으로 정립.",ex:"variation as a historically meaningful phenomenon in its own right"},
+{w:"draws on",pos:"phrase",cat:3,m:"~에 의거하다, ~을 활용하다. 자료·이론을 연구 기반으로 삼음",mo:"The present study draws on image-based character data — 자료 출처 명시.",ex:"The present study draws on image-based character data from the Han'guk Yŏktae Hancha Chahyŏng Chajŏn DB"},
+{w:"opens a productive line of inquiry",pos:"phrase",cat:3,m:"생산적인 탐구 방향을 열다. 새로운 연구 가능성을 제시",mo:"Conclusion의 미래 연구 제언 표현. warrants further investigation과 유사.",ex:"Attending to these forms opens a productive line of inquiry for Korean Studies"},
+// ── 4 동사·분석 ──
+{w:"exhibit",pos:"v.",cat:4,m:"(특성·차이를) 보여주다, 나타내다",mo:"show보다 격식적. 데이터·분석 결과를 제시할 때.",ex:"characters such as 戶 exhibit distinct stroke configurations across Japan, China, Taiwan, Hong Kong, and Korea"},
+{w:"obscure",pos:"v.",cat:4,m:"(사실을) 가리다, 흐리게 하다",mo:"binary가 실제 다양성을 은폐한다는 비판적 주장에 사용.",ex:"What this classification captures ... What it obscures is the internal diversity within each category"},
+{w:"undermine",pos:"v.",cat:4,m:"(논거·가정을) 약화시키다",mo:"기존 가정이 데이터에 의해 무너질 때. cf. contradict.",ex:"the assumption does not hold up to empirical scrutiny — the data undermine it"},
+{w:"coexist",pos:"v.",cat:4,m:"공존하다. 두 가지 이상의 형태가 동시에 사용됨",mo:"graphic variants coexisted — 자형의 동시적 공존 확인.",ex:"graphic variants frequently coexisted and usage patterns shifted"},
+{w:"converge toward",pos:"v. phrase",cat:4,m:"~쪽으로 수렴하다. 다양했던 형태가 하나로 모임",mo:"convergence toward original forms — 후기로 갈수록 본자 우세.",ex:"metal-type editions show a convergence toward original forms"},
+{w:"diverge",pos:"v.",cat:4,m:"(두 경향이) 분기하다, 달라지다",mo:"printed vs handwritten 자형 diverge — 매체별 차이.",ex:"printed and handwritten sources diverged significantly"},
+{w:"proliferate",pos:"v.",cat:4,m:"(형태·변이가) 급증하다, 번성하다",mo:"자형의 다양화(proliferation of forms) = 문화적 풍요 또는 정치 불안의 반영.",ex:"the proliferation of forms was a manifestation of cultural prosperity"},
+{w:"oscillate",pos:"v.",cat:4,m:"(두 형태 사이에서) 오락가락하다, 교번하다",mo:"printed record continued to oscillate — 인쇄본은 두 자형 사이에서 계속 변동.",ex:"even as the printed record continued to oscillate"},
+{w:"constitute",pos:"v.",cat:4,m:"~을 구성하다, ~에 해당하다",mo:"traditional-form characters constitute the substantial majority — 비율 표현.",ex:"traditional-form characters thus continue to constitute the substantial majority of characters in active use"},
+{w:"trace",pos:"v.",cat:4,m:"(변화·경로를) 추적하다",mo:"tracing their use through metal-type editions, the Sillok, and the Ilsŏngnok.",ex:"By tracing their use through metal-type editions, the Sillok, and the Ilsŏngnok"},
+{w:"document",pos:"v.",cat:4,m:"(사실·패턴을) 문서화하다, 기록하다",mo:"the study documents the diversity — 학술 증거로 확립함.",ex:"it aims to document the diversity of sinographic forms used in Korea"},
+{w:"identify",pos:"v.",cat:4,m:"(패턴·현상을) 식별하다, 확인하다",mo:"identify correlations — 상관관계를 확인하지만 인과관계는 주장 안 함.",ex:"The results are sufficient to identify correlations between sinographic variation and historical context"},
+// ── 5 형용사·정도 ──
+{w:"nuanced",pos:"adj.",cat:5,m:"미묘한 차이를 고려한, 세밀한",mo:"a more nuanced classificatory framework — binary보다 복잡한 분류 체계 필요.",ex:"points toward the need for a more nuanced classificatory framework"},
+{w:"inadequate",pos:"adj.",cat:5,m:"불충분한, 부적절한",mo:"the binary is inadequate — 기존 분류 틀 비판의 핵심 단어.",ex:"the traditional–simplified binary is inadequate for capturing the actual diversity"},
+{w:"undifferentiated",pos:"adj.",cat:5,m:"분화되지 않은, 구별 없이 묶인",mo:"under the undifferentiated label of 'traditional characters' — 내부 차이를 무시한 단일 범주화.",ex:"grouping Korean Hancha together under the undifferentiated label of 'traditional characters'"},
+{w:"markedly divergent",pos:"adj.",cat:5,m:"현저히 다른, 뚜렷이 상이한",mo:"studies have produced markedly divergent results — 연구자마다 크게 다른 수치.",ex:"studies have produced markedly divergent results: Kang reports 37%, Jang concludes 63.3%"},
+{w:"concurrent",pos:"adj.",cat:5,m:"동시에 발생하는, 공존하는",mo:"multiple graphic variants were in concurrent use — 동일 재위기 안에서 공존.",ex:"multiple graphic variants were in concurrent use within individual reigns"},
+{w:"fluid",pos:"adj.",cat:5,m:"유동적인, 고정되지 않은",mo:"sinographic forms as a fluid entity — 고정된 체계가 아니라 역사 조건에 반응하는 존재.",ex:"sinographic form emerges not as a fixed system but as a fluid entity shaped by historical conditions"},
+{w:"thoroughlyhabituated",pos:"adj.",cat:5,m:"완전히 습관화된, 관행으로 굳어진",mo:"the form 教 had become thoroughly habituated — 필사 관행에서 완전히 정착.",ex:"the form 教 had become thoroughly habituated in the actual writing practice of court officials"},
+{w:"self-evident",pos:"adj.",cat:5,m:"자명한. 별도 증명 없이 명백한",mo:"the boundary between graphic variation and meaningful distinction is not always self-evident.",ex:"the boundary between graphic variation and meaningful distinction is not always self-evident"},
+{w:"enduring",pos:"adj.",cat:5,m:"지속적인, 오래 지속되는",mo:"enduring institutional presence — 현재까지도 남아 있는 영향력.",ex:"attesting to the enduring institutional presence of sinographic culture in Korea"},
+{w:"institutionally stratified",pos:"adj.",cat:5,m:"제도적으로 층위화된. 기관·계층에 따라 다르게 분화된",mo:"Korean writing practices have long been approached as historically stratified.",ex:"writing practices have long been approached as historically stratified and functionally diverse"},
+// ── 6 연결·전환 ──
+{w:"by contrast",pos:"phrase",cat:6,m:"이에 반해. 앞과 대조되는 내용 도입",mo:"Taiwan·Hong Kong = 간화 미실시. Japan·China와 대비.",ex:"By contrast, Taiwan and Hong Kong did not pursue simplification"},
+{w:"unsurprisingly",pos:"adv.",cat:6,m:"예상대로, 당연히",mo:"예상 가능한 결과임을 독자에게 환기. 단, 더 중요한 반전 앞에 사용.",ex:"The divergence between Korean Hancha and Chinese simplified characters is, unsurprisingly, greater still"},
+{w:"above all",pos:"phrase",cat:6,m:"무엇보다도, 특히",mo:"가장 중요한 요점을 강조할 때. the binary reflects, above all, policy outcomes.",ex:"the binary reflects, above all, the outcomes of mid-twentieth-century script policy decisions"},
+{w:"in short",pos:"phrase",cat:6,m:"요컨대. 앞의 복잡한 논의를 한 문장으로 요약",mo:"The simplified–traditional divide does not map cleanly — 결론 요약.",ex:"The simplified–traditional divide, in short, does not map cleanly onto national boundaries"},
+{w:"taken together",pos:"phrase",cat:6,m:"종합하면. 여러 증거·발견을 하나로 모아 결론 도출",mo:"synchronic + diachronic 두 분석을 종합하는 Conclusion 표현.",ex:"Taken together, the synchronic analysis demonstrates ... the diachronic analysis further shows"},
+{w:"in other words",pos:"phrase",cat:6,m:"다시 말해. 앞의 내용을 다른 방식으로 재진술",mo:"복잡한 수치나 개념을 쉽게 풀어 설명할 때.",ex:"In other words, approximately one-third of sinographic forms diverge between two writing traditions"},
+{w:"furthermore",pos:"adv.",cat:6,m:"더 나아가. 앞에 추가적인 논거를 덧붙임",mo:"Furthermore, a closer examination reveals — 추가 증거 제시.",ex:"Furthermore, the patterns documented in this study do not lend themselves to simple causal explanation"},
+{w:"nevertheless",pos:"adv.",cat:6,m:"그럼에도 불구하고",mo:"앞의 한계를 인정하면서도 다음 주장을 유지할 때.",ex:"Nevertheless, sinographic elements have continued to exert a significant influence on the Korean language"},
+{w:"even within",pos:"phrase",cat:6,m:"~안에서조차도. 예상보다 더 광범위한 변이를 강조",mo:"even within a single region — 지역 내부에서도 균일하지 않음.",ex:"sinographic forms were neither fixed nor uniform across time — even within a single region"},
+{w:"rather than",pos:"conj.",cat:6,m:"~가 아니라. 두 가지를 대비시키며 실제 해당하는 것을 강조",mo:"rather than interpreting, the study aims to document — 해석이 아닌 기록이 목적.",ex:"Rather than interpreting the cultural significance of individual forms, it aims to document the diversity"},
+// ── 7 비교·대조 ──
+{w:"binary / dichotomy",pos:"n.",cat:7,m:"이분법. 두 가지 범주로만 나누는 분류 방식",mo:"simplified–traditional binary = 이 논문이 비판하는 핵심 분류 틀.",ex:"the dominant binary classification of sinographs into 'traditional' and 'simplified' forms"},
+{w:"spectrum",pos:"n.",cat:7,m:"스펙트럼. 연속적·다층적 범위",mo:"'traditional' is not a single form but a spectrum — binary 비판의 대안적 비유.",ex:"'traditional' is not a single form but a spectrum of locally differentiated practices"},
+{w:"divergence",pos:"n.",cat:7,m:"분기(分岐). 두 형태·전통이 서로 달라지는 정도",mo:"30.2% divergence between Korean Hancha and Taiwanese forms.",ex:"the degree of difference varies considerably depending on the criteria applied"},
+{w:"internal diversity",pos:"n.",cat:7,m:"내부 다양성. 같은 범주 안에 존재하는 다양성",mo:"'traditional' 범주 내부에서도 상당한 자형 차이 존재.",ex:"revealing significant internal diversity even within the category of traditional-form sinographs"},
+{w:"uniform / uniformity",pos:"adj./n.",cat:7,m:"균일한 / 균일성. 모든 항목이 동일한 상태",mo:"assumes uniformity that does not reflect the historical record — 이 논문이 반박하는 가정.",ex:"implicitly assuming a degree of internal uniformity that does not reflect the historical record"},
+{w:"distinct trajectory",pos:"n.",cat:7,m:"별개의 경로. 각각 다른 방향으로 전개되는 변화 과정",mo:"sinographic forms have developed along distinct trajectories shaped by each society's circumstances.",ex:"sinographic forms have developed along distinct trajectories shaped by each society's own historical circumstances"},
+{w:"locally differentiated",pos:"adj.",cat:7,m:"지역적으로 분화된. 지역마다 고유한 특성으로 발전한",mo:"'traditional' = a spectrum of locally differentiated practices.",ex:"'traditional' is not a single form but a spectrum of locally differentiated practices"},
+{w:"medium-specific",pos:"adj.",cat:7,m:"매체별로 다른. 인쇄·필사 등 기록 매체에 따라 달리 나타나는",mo:"인쇄본 vs 필사본에서 자형 차이 발견 → medium-specific scribal conventions.",ex:"reflecting the influence of time period, printing technology, and document type"},
+];
+
+let curCat=-1,openId=null;
+function getId(w){return w.replace(/[^a-zA-Z0-9]/g,'_');}
+function getV(id){return V.find(v=>getId(v.w)===id);}
+
+function render(){
+  const q=document.getElementById('q').value.toLowerCase();
+  const filtered=V.filter(v=>{
+    const mc=curCat<0||v.cat===curCat;
+    const mq=!q||v.w.toLowerCase().includes(q)||v.m.includes(q)||v.mo.toLowerCase().includes(q);
+    return mc&&mq;
+  });
+  const kn=V.filter(v=>known[v.w]).length;
+  const pct=Math.round(kn/V.length*100);
+  document.getElementById('prog').style.width=pct+'%';
+  document.getElementById('prog-label').textContent=`${kn} / ${V.length} 완료 (${pct}%)`;
+  document.getElementById('stats').innerHTML=`
+    <div class="sp">전체 <b>${V.length}</b></div>
+    <div class="sp">완료 <b>${kn}</b></div>
+    <div class="sp">남은 것 <b>${V.length-kn}</b></div>
+    <div class="sp">표시 중 <b>${filtered.length}</b></div>
+  `;
+  const byCat={};
+  filtered.forEach(v=>{if(!byCat[v.cat])byCat[v.cat]=[];byCat[v.cat].push(v);});
+  const content=document.getElementById('content');
+  if(!filtered.length){content.innerHTML='<div class="empty">검색 결과가 없습니다</div>';return;}
+  content.innerHTML=Object.entries(byCat).map(([ci,items])=>`
+    <div class="sec">
+      <div class="sec-label">${CATS[ci]}</div>
+      <div class="list">
+        ${items.map(v=>{
+          const id=getId(v.w),isO=openId===id,isK=known[v.w],tc=TC[v.cat];
+          return `<div class="row${isO?' open':''}" id="row_${id}" onclick="toggle('${id}')">
+            <div><div class="rw">${v.w}</div><div class="rp">${v.pos}</div></div>
+            <div class="rm">${v.m}</div>
+            <div class="rr">
+              <button class="cbtn${isK?' done':''}" onclick="chk(event,'${id}')">
+                <svg class="ck" viewBox="0 0 9 9" fill="none" stroke="white" stroke-width="1.8"><path d="M1 4.5l2.5 2.5 4.5-4"/></svg>
+              </button>
+              <svg class="ei" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M2.5 4.5l3.5 4 3.5-4"/></svg>
+            </div>
+          </div>
+          <div class="detail">
+            <span class="badge" style="background:var(--${tc}-bg);color:var(--${tc})">${CATS[v.cat]}</span>
+            <div class="dl">예문</div>
+            <div class="dex">${v.ex}</div>
+            <div class="dl">메모</div>
+            <div class="dmo">${v.mo}</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`).join('');
+}
+function toggle(id){
+  openId=openId===id?null:id;
+  render();
+  if(openId){const el=document.getElementById('row_'+id);if(el)el.scrollIntoView({behavior:'smooth',block:'nearest'});}
+}
+function chk(e,id){e.stopPropagation();const v=getV(id);if(v){known[v.w]=!known[v.w];saveKnown();}render();}
+const tabs=document.getElementById('tabs');
+tabs.innerHTML='<button class="tab on" data-c="-1" onclick="setCat(-1)">전체</button>'+
+  CATS.map((c,i)=>`<button class="tab" data-c="${i}" onclick="setCat(${i})">${c}</button>`).join('');
+function setCat(i){curCat=i;openId=null;document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',+b.dataset.c===i));render();}
+render();
+</script>
+</body>
+</html>
