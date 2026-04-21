@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>又·再·还 중국어 스터디</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#EAF2FB;display:flex;justify-content:center;align-items:flex-start;padding:40px 20px;min-height:100vh;font-family:'Noto Sans KR',sans-serif;}
+.outer{width:540px;}
+.pages{position:relative;overflow:hidden;}
+.page{width:540px;min-width:540px;position:absolute;top:0;left:0;transition:transform 0.4s cubic-bezier(.7,0,.2,1);}
+.card{background:#F6FAFF;border-radius:28px;border:2.5px solid #C8DFF5;padding:24px 22px 20px;position:relative;overflow:hidden;}
+.deco{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;}
+.badge{display:inline-flex;align-items:center;background:#D6E8FB;color:#2A6A9E;font-size:10px;font-weight:800;letter-spacing:.08em;padding:4px 13px;border-radius:20px;margin-bottom:11px;}
+.ttl{font-size:18px;font-weight:900;color:#1E2D3A;margin-bottom:2px;}
+.ttl em{color:#3A8FD6;font-style:normal;}
+.sub{font-size:11px;color:#A0BAD0;margin-bottom:10px;}
+.footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px;}
+.tags{font-size:10px;color:#A0BAD0;}
+.nav-dots{display:flex;gap:5px;}
+.ndot{width:7px;height:7px;border-radius:50%;background:#C8DFF5;cursor:pointer;transition:.2s;}
+.ndot.on{background:#3A8FD6;width:20px;border-radius:4px;}
+
+/* 맵 */
+.map-holder{position:relative;height:380px;width:100%;}
+.map-svg{position:absolute;top:0;left:0;width:100%;height:100%;overflow:visible;}
+.c-node{position:absolute;width:94px;height:94px;border-radius:50%;background:#3A8FD6;display:flex;flex-direction:column;align-items:center;justify-content:center;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10;box-shadow:0 4px 18px rgba(58,143,214,.3);}
+.c-ko{font-size:19px;font-weight:900;color:#fff;line-height:1;}
+.c-hint{font-size:9px;color:rgba(255,255,255,.65);margin-top:2px;}
+.leaf{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:20px;padding:10px 14px;z-index:10;width:116px;text-align:center;}
+.lf-char{font-size:26px;font-weight:900;line-height:1.1;}
+.lf-pin{font-size:10px;font-style:italic;opacity:.7;margin:3px 0 2px;}
+.lf-ko{font-size:11px;font-weight:800;line-height:1.3;}
+.lf-time{font-size:9px;margin-top:3px;line-height:1.4;opacity:.75;}
+
+.la{background:#FFF0F3;border:2px solid #F7C5D0;}
+.la .lf-char,.la .lf-ko{color:#D95F7A;}
+.la .lf-pin{color:#E893A6;}
+.lb{background:#EEF6FF;border:2px solid #B0CEFA;}
+.lb .lf-char,.lb .lf-ko{color:#2A6FD6;}
+.lb .lf-pin{color:#6BA3E8;}
+.lc{background:#E8F8F0;border:2px solid #9FD9C0;}
+.lc .lf-char,.lc .lf-ko{color:#1E8A5C;}
+.lc .lf-pin{color:#4DB58A;}
+
+/* 탭 바 */
+.tab-bar{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
+.tab{font-size:10.5px;font-weight:700;padding:5px 11px;border-radius:20px;cursor:pointer;border:1.5px solid transparent;transition:.2s;color:#888;background:#F0F0F0;}
+.tab.on{color:#fff;}
+.tab.t0.on{background:#D95F7A;}
+.tab.t1.on{background:#2A6FD6;}
+.tab.t2.on{background:#1E8A5C;}
+
+/* 예문 패널 */
+.ex-panel{display:none;flex-direction:column;gap:10px;margin-bottom:14px;}
+.ex-panel.show{display:flex;}
+
+.ex-card{border-radius:16px;padding:12px 15px;position:relative;}
+.ex-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:4px 0 0 4px;}
+
+.pa .ex-card{background:#FFF0F3;} .pa .ex-card::before{background:#D95F7A;}
+.pb .ex-card{background:#EEF6FF;} .pb .ex-card::before{background:#2A6FD6;}
+.pc .ex-card{background:#E8F8F0;} .pc .ex-card::before{background:#1E8A5C;}
+
+.ex-word-row{display:flex;align-items:center;gap:7px;margin-bottom:5px;}
+.ex-char{font-size:15px;font-weight:900;}
+.pa .ex-char{color:#D95F7A;}
+.pb .ex-char{color:#2A6FD6;}
+.pc .ex-char{color:#1E8A5C;}
+
+.ex-tag{font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:10px;}
+.pa .ex-tag{background:#FFD6E0;color:#C04060;}
+.pb .ex-tag{background:#CCE0FF;color:#1850B0;}
+.pc .ex-tag{background:#C0EDD8;color:#0E6040;}
+
+.ex-zh{font-size:13px;font-weight:700;color:#2D2D2D;margin-bottom:4px;line-height:1.55;}
+.ex-ko{font-size:11px;color:#888;line-height:1.5;}
+.ex-ko strong{color:#555;font-weight:700;}
+
+/* 실수 카드 */
+.mistake-section{margin-bottom:14px;}
+.mistake-title{font-size:11px;font-weight:800;color:#C04060;margin-bottom:8px;display:flex;align-items:center;gap:5px;}
+.mistake-card{background:#FFF5F7;border:1.5px solid #F7C5D0;border-radius:14px;padding:11px 14px;margin-bottom:8px;}
+.mistake-wrong{font-size:13px;color:#D95F7A;margin-bottom:4px;text-decoration:line-through;opacity:.7;}
+.mistake-right{font-size:13px;color:#1A1A1A;font-weight:700;margin-bottom:5px;}
+.mistake-why{font-size:11px;color:#888;line-height:1.6;}
+
+/* 비교표 */
+.compare-table{width:100%;border-collapse:collapse;margin-bottom:14px;font-size:11px;}
+.compare-table th{padding:7px 10px;text-align:center;font-weight:800;font-size:11px;}
+.compare-table td{padding:7px 10px;text-align:center;border-top:1px solid #E8EEF5;color:#555;}
+.th-又{background:#FFE8EE;color:#D95F7A;border-radius:8px 0 0 0;}
+.th-再{background:#E5EFFF;color:#2A6FD6;}
+.th-还{background:#DDF5EB;color:#1E8A5C;border-radius:0 8px 0 0;}
+.th-label{background:#F5F7FA;color:#999;}
+.row-alt{background:#FAFBFF;}
+
+.back-btn{font-size:11px;color:#2A6A9E;background:#D6E8FB;border:none;border-radius:12px;padding:5px 13px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-weight:700;}
+</style>
+</head>
+<body>
+<div class="outer">
+<div class="pages" id="pages">
+
+<!-- ─── PAGE 1: 마인드맵 ─── -->
+<div class="page" id="pg1">
+<div class="card">
+  <svg class="deco" viewBox="0 0 540 520" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="490" cy="55" r="55" fill="#C8DFF5" opacity=".4"/>
+    <circle cx="45" cy="450" r="42" fill="#D6E8FB" opacity=".35"/>
+    <circle cx="505" cy="390" r="32" fill="#FFE8EE" opacity=".4"/>
+    <circle cx="28" cy="85" r="3.5" fill="#A0C4E8" opacity=".6"/>
+    <circle cx="514" cy="160" r="4" fill="#F7C5D0" opacity=".5"/>
+    <circle cx="18" cy="310" r="3" fill="#9FD9C0" opacity=".5"/>
+  </svg>
+  <div class="badge">중국어 스터디 · 01</div>
+  <div class="ttl">'<em>또·다시</em>'를 중국어로?</div>
+  <div class="sub">又·再·还 — 상황에 따라 완전히 달라요</div>
+  <div class="map-holder" id="mapHolder">
+    <svg class="map-svg" id="mapSvg" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="c-node"><div class="c-ko">또/다시</div><div class="c-hint">又·再·还</div></div>
+    <div class="leaf la" id="lf0">
+      <div class="lf-char">又</div>
+      <div class="lf-pin">yòu</div>
+      <div class="lf-ko">이미 된 반복</div>
+      <div class="lf-time">⏱ 과거·완료</div>
+    </div>
+    <div class="leaf lb" id="lf1">
+      <div class="lf-char">再</div>
+      <div class="lf-pin">zài</div>
+      <div class="lf-ko">앞으로 할 반복</div>
+      <div class="lf-time">⏳ 미래·미완료</div>
+    </div>
+    <div class="leaf lc" id="lf2">
+      <div class="lf-char">还</div>
+      <div class="lf-pin">hái</div>
+      <div class="lf-ko">추가·여전히</div>
+      <div class="lf-time">➕ 추가 / 지속</div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="tags">#중국어 #부사 #又 #再 #还</div>
+    <div class="nav-dots">
+      <div class="ndot on" onclick="goPage(0)"></div>
+      <div class="ndot" onclick="goPage(1)"></div>
+      <div class="ndot" onclick="goPage(2)"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ─── PAGE 2: 예문 ─── -->
+<div class="page" id="pg2">
+<div class="card">
+  <svg class="deco" viewBox="0 0 540 620" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="490" cy="50" r="50" fill="#C8DFF5" opacity=".35"/>
+    <circle cx="40" cy="580" r="38" fill="#DDF5EB" opacity=".35"/>
+  </svg>
+  <div class="badge">중국어 스터디 · 02</div>
+  <div class="ttl"><em>예문</em>으로 감 잡기</div>
+  <div class="sub">탭을 눌러 상황별 예문을 확인해요</div>
+
+  <div class="tab-bar">
+    <div class="tab t0 on" onclick="showTab(0)">😤 又 — 이미 됨</div>
+    <div class="tab t1" onclick="showTab(1)">🔜 再 — 앞으로</div>
+    <div class="tab t2" onclick="showTab(2)">➕ 还 — 추가·지속</div>
+  </div>
+
+  <div class="ex-panel pa show" id="tab0">
+    <div class="ex-card">
+      <div class="ex-word-row"><span class="ex-char">又</span><span class="ex-tag">과거 반복</span></div>
+      <div class="ex-zh">他<strong style="color:#D95F7A">又</strong>迟到了。</div>
+      <div class="ex-ko">그가 <strong>또</strong> 지각했어. (이미 지각한 상황)</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-word-row"><span class="ex-char">又</span><span class="ex-tag">동시 성립</span></div>
+      <div class="ex-zh">这道菜<strong style="color:#D95F7A">又</strong>辣<strong style="color:#D95F7A">又</strong>香。</div>
+      <div class="ex-ko">이 요리는 맵기도 하고 <strong>향기롭기도</strong> 해.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-word-row"><span class="ex-char">又</span><span class="ex-tag">완료 반복</span></div>
+      <div class="ex-zh">我<strong style="color:#D95F7A">又</strong>修改了一点点。</div>
+      <div class="ex-ko">나 <strong>또</strong> 조금 수정했어. ✓ (이미 수정 완료)</div>
+    </div>
+  </div>
+
+  <div class="ex-panel pb" id="tab1">
+    <div class="ex-card">
+      <div class="ex-word-row"><span class="ex-char">再</span><span class="ex-tag">미래 반복 요청</span></div>
+      <div class="ex-zh">你<strong style="color:#2A6FD6">再</strong>说一遍。</div>
+      <div class="ex-ko"><strong>한 번 더</strong> 말해줘. (아직 말 안 함)</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-word-row"><span class="ex-char">再</span><span class="ex-tag">조건 후 행동</span></div>
+      <div class="ex-zh">吃完饭<strong style="color:#2A6FD6">再</strong>走。</div>
+      <div class="ex-ko">밥 다 먹고 나서 가. (아직 안 감)</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-word-row"><span class="ex-char">再</span><span class="ex-tag">미래 계획</span></div>
+      <div class="ex-zh">我<strong style="color:#2A6FD6">再</strong>修改一下。</div>
+      <div class="ex-ko">내가 <strong>한 번 더</strong> 수정할게. (아직 안 함)</div>
+    </div>
+  </div>
+
+  <div class="ex-panel pc" id="tab2">
+    <div class="ex-card">
+      <div class="ex-word-row"><span class="ex-char">还</span><span class="ex-tag">추가 요청</span></div>
+      <div class="ex-zh">我<strong style="color:#1E8A5C">还</strong>要一碗。</div>
+      <div class="ex-ko">나 한 그릇 <strong>더</strong> 줘. (이미 먹고 있는 상황에서 추가)</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-word-row"><span class="ex-char">还</span><span class="ex-tag">상태 지속</span></div>
+      <div class="ex-zh">他<strong style="color:#1E8A5C">还</strong>没来。</div>
+      <div class="ex-ko">그는 <strong>아직도</strong> 안 왔어. (상태 지속)</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-word-row"><span class="ex-char">还</span><span class="ex-tag">추가 나열</span></div>
+      <div class="ex-zh">她会唱歌，<strong style="color:#1E8A5C">还</strong>会跳舞。</div>
+      <div class="ex-ko">그녀는 노래도 하고, <strong>게다가</strong> 춤도 춰.</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <button class="back-btn" onclick="goPage(0)">← 지도 보기</button>
+    <div class="nav-dots">
+      <div class="ndot" onclick="goPage(0)"></div>
+      <div class="ndot on" onclick="goPage(1)"></div>
+      <div class="ndot" onclick="goPage(2)"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ─── PAGE 3: 비교표 + 실수 포인트 ─── -->
+<div class="page" id="pg3">
+<div class="card">
+  <svg class="deco" viewBox="0 0 540 680" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="495" cy="50" r="48" fill="#C8DFF5" opacity=".35"/>
+    <circle cx="38" cy="620" r="40" fill="#DDF5EB" opacity=".3"/>
+  </svg>
+  <div class="badge">중국어 스터디 · 03</div>
+  <div class="ttl"><em>비교표</em> + 실수 포인트</div>
+  <div class="sub">헷갈리는 순간을 미리 잡아요</div>
+
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th class="th-label" style="border-radius:8px 0 0 0;font-size:10px;">구분</th>
+        <th class="th-又">又 yòu</th>
+        <th class="th-再">再 zài</th>
+        <th class="th-还">还 hái</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:700;color:#555;background:#F5F7FA;">시제</td>
+        <td style="color:#D95F7A;font-weight:700;">과거·완료</td>
+        <td style="color:#2A6FD6;font-weight:700;">미래·미완료</td>
+        <td style="color:#1E8A5C;font-weight:700;">무관</td>
+      </tr>
+      <tr class="row-alt">
+        <td style="font-weight:700;color:#555;background:#F5F7FA;">핵심</td>
+        <td style="color:#D95F7A;">이미 된 반복</td>
+        <td style="color:#2A6FD6;">앞으로 할 반복</td>
+        <td style="color:#1E8A5C;">추가 / 지속</td>
+      </tr>
+      <tr>
+        <td style="font-weight:700;color:#555;background:#F5F7FA;">느낌</td>
+        <td style="color:#D95F7A;">"또 그랬네"</td>
+        <td style="color:#2A6FD6;">"또 해줘/할게"</td>
+        <td style="color:#1E8A5C;">"게다가/아직도"</td>
+      </tr>
+      <tr class="row-alt">
+        <td style="font-weight:700;color:#555;background:#F5F7FA;border-radius:0 0 0 8px;">예시</td>
+        <td style="color:#D95F7A;">又迟到了</td>
+        <td style="color:#2A6FD6;">再说一遍</td>
+        <td style="color:#1E8A5C;border-radius:0 0 8px 0;">还没来</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="mistake-section">
+    <div class="mistake-title">⚠️ 자주 하는 실수</div>
+
+    <div class="mistake-card">
+      <div class="mistake-wrong">我再修改了一点点。❌</div>
+      <div class="mistake-right">我<span style="color:#D95F7A;font-weight:900">又</span>修改了一点点。✓</div>
+      <div class="mistake-why">→ 이미 수정을 완료했으므로 <b>又</b>. 再는 아직 안 한 일에 써요.</div>
+    </div>
+
+    <div class="mistake-card">
+      <div class="mistake-wrong">你又说一遍。❌ (부탁할 때)</div>
+      <div class="mistake-right">你<span style="color:#2A6FD6;font-weight:900">再</span>说一遍。✓</div>
+      <div class="mistake-why">→ 아직 말하지 않은 것을 부탁하는 상황이므로 <b>再</b>.</div>
+    </div>
+
+    <div class="mistake-card">
+      <div class="mistake-wrong">我再要一碗。❌ (추가 주문)</div>
+      <div class="mistake-right">我<span style="color:#1E8A5C;font-weight:900">还</span>要一碗。✓</div>
+      <div class="mistake-why">→ 이미 먹고 있는 상황에서 추가 요청이므로 <b>还</b>.</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <button class="back-btn" onclick="goPage(0)">← 처음으로</button>
+    <div class="nav-dots">
+      <div class="ndot" onclick="goPage(0)"></div>
+      <div class="ndot" onclick="goPage(1)"></div>
+      <div class="ndot on" onclick="goPage(2)"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+</div><!-- /pages -->
+</div><!-- /outer -->
+
+<script>
+let cur=0;
+function goPage(n){
+  cur=n;
+  document.querySelectorAll('.page').forEach((p,i)=>p.style.transform=`translateX(${(i-n)*100}%)`);
+  document.querySelectorAll('.ndot').forEach((d,i)=>d.classList.toggle('on',i%3===n));
+  setTimeout(()=>{
+    document.getElementById('pages').style.height=document.getElementById('pg'+(n+1)).offsetHeight+'px';
+  },50);
+}
+
+function showTab(n){
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('on',i===n));
+  document.querySelectorAll('.ex-panel').forEach((p,i)=>p.classList.toggle('show',i===n));
+  setTimeout(()=>{
+    document.getElementById('pages').style.height=document.getElementById('pg2').offsetHeight+'px';
+  },30);
+}
+
+function layoutMap(){
+  const holder=document.getElementById('mapHolder');
+  const svg=document.getElementById('mapSvg');
+  const W=holder.offsetWidth, H=holder.offsetHeight;
+  const cx=W/2, cy=H/2;
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  svg.innerHTML='';
+  const leaves=[0,1,2].map(i=>document.getElementById('lf'+i));
+  const radius=Math.min(W,H)*0.38;
+  const colors=['#F7C5D0','#B0CEFA','#9FD9C0'];
+  const angles=[-90, 30, 150];
+  leaves.forEach((leaf,i)=>{
+    const angle=angles[i]*Math.PI/180;
+    const lw=leaf.offsetWidth, lh=leaf.offsetHeight;
+    const lx=cx+Math.cos(angle)*radius-lw/2;
+    const ly=cy+Math.sin(angle)*radius-lh/2;
+    leaf.style.left=lx+'px';
+    leaf.style.top=ly+'px';
+    const sx=cx+Math.cos(angle)*49, sy=cy+Math.sin(angle)*49;
+    const ex=lx+lw/2-Math.cos(angle)*13, ey=ly+lh/2-Math.sin(angle)*13;
+    const mx=(sx+ex)/2-Math.sin(angle)*18, my=(sy+ey)/2+Math.cos(angle)*18;
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d',`M${sx},${sy} Q${mx},${my} ${ex},${ey}`);
+    path.setAttribute('stroke',colors[i]);
+    path.setAttribute('stroke-width','2.5');
+    path.setAttribute('fill','none');
+    path.setAttribute('stroke-dasharray','5 4');
+    path.setAttribute('stroke-linecap','round');
+    svg.appendChild(path);
+    const dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    dot.setAttribute('cx',ex); dot.setAttribute('cy',ey);
+    dot.setAttribute('r','3.5'); dot.setAttribute('fill',colors[i]);
+    svg.appendChild(dot);
+  });
+}
+
+window.addEventListener('load',()=>{
+  document.querySelectorAll('.page').forEach((p,i)=>p.style.transform=`translateX(${i*100}%)`);
+  setTimeout(()=>{
+    layoutMap();
+    document.getElementById('pages').style.height=document.getElementById('pg1').offsetHeight+'px';
+  },100);
+});
+window.addEventListener('resize',layoutMap);
+</script>
+</body>
+</html>
